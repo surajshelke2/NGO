@@ -46,12 +46,14 @@ const StudentSchema = mongoose.Schema({
     minLength: 3,
   },
 
-  lastname: {
+  lastName: {
     type: String,
     require: true,
     trim: true,
     maxLength: 50,
   },
+},{
+  timestamps: true,
 });
 
 const StudentData = mongoose.model("studentData", StudentSchema);
@@ -105,7 +107,7 @@ const teacherSchema = mongoose.Schema({
     maxLength: 30,
     minLength: 3,
   },
-  lastname: {
+  lastName: {
     type: String,
     require: true,
     trim: true,

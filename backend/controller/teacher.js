@@ -5,7 +5,7 @@ const { teacherData } = require("../model/User");
 
 
 const signupSchema = z.object({
-  username: z.string().email(),
+  email: z.string().email(),
   firstName: z.string(),
   lastName: z.string(),
   middleName:z.string(),
@@ -13,7 +13,7 @@ const signupSchema = z.object({
   degree :z.string()
 });
 const signinSchema = z.object({
-  username: z.string().email(),
+  email: z.string().email(),
   password: z.string(),
 });
 const updateSchema = z.object({
@@ -115,7 +115,8 @@ const getUsers = asyncHandler(async (req, res) => {
       $or: [
         { firstName: { $regex: filter } },
         { lastName: { $regex: filter } },
-        { rollNo: { $regex: filter } },
+        { email:    { $regex:filter}}
+        
       ],
     });
 
@@ -125,7 +126,7 @@ const getUsers = asyncHandler(async (req, res) => {
         firstName: user.firstName,
         middleName: user.middleName,
         lastName: user.lastName,
-        rollNo: user.rollNo,
+         role : user.role,
         _id: user._id,
       })),
     });
@@ -136,10 +137,6 @@ const getUsers = asyncHandler(async (req, res) => {
 
 module.exports = { register, login, updateUser, getUsers };
 
-
-
-
-module.exports={register}
 
 
 

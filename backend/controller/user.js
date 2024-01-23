@@ -4,7 +4,7 @@ const asyncHandler = require("express-async-handler");
 const { StudentData, teacherData } = require("../model/User");
 
 const signupSchema = z.object({
-  username: z.string().email(),
+  email: z.string().email(),
   firstName: z.string(),
   lastName: z.string(),
   middleName: z.string(),
@@ -12,7 +12,7 @@ const signupSchema = z.object({
 });
 
 const signinSchema = z.object({
-  username: z.string().email(),
+  email: z.string().email(),
   password: z.string(),
 });
 
@@ -124,11 +124,12 @@ const getUsers = asyncHandler(async (req, res) => {
 
     res.json({
       users: users.map((user) => ({
-        username: user.username,
+        email: user.email,
         firstName: user.firstName,
         middleName: user.middleName,
-        lastName: user.lastName,
+        lastName:user.lastName,
         rollNo: user.rollNo,
+        role :user.role,
         _id: user._id,
       })),
     });
