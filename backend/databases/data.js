@@ -4,7 +4,7 @@ const connectDB = async () => {
   try {
    await mongoose.connect(process.env.MONGODB, {
       
-    dbName:"Paytm"
+    dbName:"NGO"
    
     });
 

@@ -77,11 +77,7 @@ const login = asyncHandler(async (req, res) => {
       password: data.password,
     });
 
-    const teacher = await teacherData.findOne({
-      email: data.email,
-      password: data.password,
-    });
-
+  
     if (user) {
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
@@ -90,15 +86,7 @@ const login = asyncHandler(async (req, res) => {
         message: "I am Student",
         token,
       });
-    } else if (teacher) {
-      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
-
-      res.json({
-        success: true,
-        message: "I am Teacher",
-        token,
-      });
-    } else {
+    }  else {
       throw new Error("Error while logging in");
     }
   } catch (error) {
