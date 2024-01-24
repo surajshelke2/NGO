@@ -13,10 +13,11 @@ export default function Login() {
       <form>
         <input
           type="Email"
-          placeholder="Email/Roll No."
+          placeholder="Email / Roll No."
+          autoFocus
           value={email}
           className="mt-1 block w-full px-3 py-2 bg-transparent border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-    focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+    focus:outline-none focus:border-emerald-500  focus:ring-1 focus:emerald-500"
           onChange={(e) => setEmail(e.value)}
         />
         <input
@@ -24,7 +25,7 @@ export default function Login() {
           value={email}
           placeholder="password"
           className="mt-1 block w-full px-3 py-2 bg-transparent border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-    focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+    focus:outline-none focus:border-emerald-500  focus:ring-1 focus:emerald-500"
           onChange={(e) => setPassword(e.value)}
         />
           <button
