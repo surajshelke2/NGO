@@ -1,18 +1,27 @@
+import axios from "axios";
 import { useState } from "react";
 import { MdCastForEducation } from "react-icons/md";
 
 
 export default function SignUp() {
-  const [firstname, setFirstname] = useState("");
-  const [midlename, setMidlename] = useState("");
-  const [lastname, setLastname] = useState("");
+  const [firstName, setFirstname] = useState("");
+  const [middleName, setMidlename] = useState("");
+  const [lastName, setLastname] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   // const upload = multer()
   function HandleSubmit(e){
     e.preventDefault();
-    // upload.single('./public')
-    console.log({username,password,email});
+    console.log({firstName,middleName,lastName,password,email});
+    axios.post("http://localhost:4000/api/v1/user/student/signup",{firstName,middleName,lastName,email,password}).then(()=>{
+      console.log("user registered successfully")
+      alert("check your email for verification");
+    }).catch((err)=>{
+      console.log("user not registered : ",err);
+      alert("user not registered try again");
+    })
+
+    // console.log("data submitted");
   }
   return (
     <div>
@@ -24,7 +33,7 @@ export default function SignUp() {
         <input
           type="text"
           placeholder="firstname"
-          value={firstname}
+          value={firstName}
           autoFocus
           className="mt-1 block w-full px-3 py-2 bg-transparent border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
     focus:outline-none focus:border-emerald-500  focus:ring-1 focus:emerald-500"
@@ -33,7 +42,7 @@ export default function SignUp() {
         <input
           type="text"
           placeholder="midlename"
-          value={midlename}
+          value={middleName}
           className="mt-1 block w-full px-3 py-2 bg-transparent border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
     focus:outline-none focus:border-emerald-500  focus:ring-1 focus:emerald-500"
           onChange={(e) => setMidlename(e.target.value)}
@@ -41,7 +50,7 @@ export default function SignUp() {
         <input
           type="text"
           placeholder="lastname"
-          value={lastname}
+          value={lastName}
           className="mt-1 block w-full px-3 py-2 bg-transparent border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
     focus:outline-none focus:border-emerald-500  focus:ring-1 focus:emerald-500"
           onChange={(e) => setLastname(e.target.value)}
