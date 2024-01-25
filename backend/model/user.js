@@ -18,10 +18,11 @@ const StudentSchema = mongoose.Schema(
     },
 
     rollNo: {
-      type: String,
+      type: Number,
       required: [true, "Please provide your Roll No."],
       index: { unique: true },
       trim: true,
+      default:0
     },
     role: {
       type: String,
@@ -60,6 +61,12 @@ const StudentSchema = mongoose.Schema(
     timestamps: true,
   }
 );
+
+StudentSchema.pre('save', async function(next) {
+  const lastUser = await StudentData.findOne({}, {}, { sort: { 'rollNo': -1 } });
+  this.rollNo = (lastUser && lastUser.rollNo + 1) || 1;
+  next();
+});
 
 const StudentData = mongoose.model("student", StudentSchema);
 
