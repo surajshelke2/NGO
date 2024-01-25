@@ -1,12 +1,13 @@
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
-const  studentRouter = require('./router/user.router.js')
-const teacherRouter = require("./router/teacher.router.js");
+const  studentRouter = require('./router/user')
+const teacherRouter = require("./router/teacher");
 
 require("dotenv").config();
-const connectDB = require("./databases/data.db.js");
+const connectDB = require("./databases/data");
 const bodyParser = require("body-parser");
+const { verifyMail } = require("./controller/teacher");
 const app = express();
 
 // Middleware
@@ -14,6 +15,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(helmet());
+app.use(express.json())
 
 // Routes
 
