@@ -19,8 +19,8 @@ app.use(helmet());
 
 // Routes
 
-app.use("/api/v1/user", studentRouter);
-app.use("/api/v1/teacher", teacherRouter);
+app.use("/api/v1/user/student", studentRouter);
+app.use("/api/v1/user/teacher", teacherRouter);
 app.use("/api/v1", (req, res) => {
   console.log("App is running fine!!");
   res.json({ message: "App is running fine...." });

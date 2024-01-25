@@ -1,72 +1,139 @@
 const z = require("zod");
-const jwt = require('jsonwebtoken');
-const asyncHandler = require('express-async-handler');
+const jwt = require("jsonwebtoken");
+const asyncHandler = require("express-async-handler");
+const nodemailer = require("nodemailer");
 const { teacherData } = require("../model/User");
-
+const bcrypt = require("bcrypt");
 
 const signupSchema = z.object({
   email: z.string().email(),
   firstName: z.string(),
   lastName: z.string(),
-  middleName:z.string(),
+  middleName: z.string(),
   password: z.string(),
-  degree :z.string()
+  degree: z.string(),
 });
+
 const signinSchema = z.object({
   email: z.string().email(),
   password: z.string(),
 });
+
 const updateSchema = z.object({
   password: z.string().optional(),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   middleName: z.string().optional(),
-  degree:z.string().optional()
+  degree: z.string().optional(),
 });
-
 
 const register = asyncHandler(async (req, res) => {
   try {
     const { success, data } = signupSchema.safeParse(req.body);
+
     if (!success) {
-      throw new Error("Invalid input data");
+      return res.status(422).json({ success: false, message: "Invalid input data" });
     }
 
     const existingUser = await teacherData.findOne({ email: data.email });
+
     if (existingUser) {
-      throw new Error("Email already taken");
+      return res.status(409).json({ success: false, message: "Email already taken" });
     }
+
+    const hashPassword = await bcrypt.hash(data.password, 10);
 
     const user = await teacherData.create({
       email: data.email,
-      password: data.password,
+      password: hashPassword,
       firstName: data.firstName,
       middleName: data.middleName,
       lastName: data.lastName,
-      degree:data.degree
+      degree: data.degree,
+      isVerify: data.isVerify,
     });
 
     const userId = user._id;
     const token = jwt.sign({ userId }, process.env.JWT_SECRET);
 
-    res.json({
-      message: "User created successfully",
+    sendVerifyMail(data.firstName, data.email, userId);
+    
 
+    res.status(201).json({
+      success: true,
+      message: "User created successfully. Check your email for verification.",
       token: token,
     });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error(error.message);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 });
 
+const sendVerifyMail = asyncHandler(async (name, email, user_id) => {
+  try {
+    
+    const transporter = nodemailer.createTransport({
+      service:'gmail',
+      auth:{
+        user:process.env.EMAIL_USERNAME,
+        pass:process.env.EMAIL_PASSWORD,
+      }
+    })
 
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: "Email Verification",
+      html: `
+      <h2>Hii ${name}</h2>
+      <p>Click the following link to verify your email:</p>
+      <a href="${process.env.VERIFY_URL}/${user_id}">Verify Email</a>
+    `,
+     text:'hello',
+    };
 
+    await transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error sending verification email:", error.message);
+      
+      }
+      console.log("Verification email sent:", info);
+    });
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+const verifyMail = asyncHandler(async (req, res) => {
+  try {
+    const updatedInfo = await teacherData.updateOne(
+      { _id: req.query.id },
+      {
+        $set: {
+          isVerified: true,
+        },
+      }
+    );
+
+    if (updatedInfo.nModified === 1) {
+      console.log("Email Verification Is Completed !!");
+      res.status(204).send();
+    } else {
+      console.log("User not found or already verified.");
+      res.status(404).send("User not found or already verified.");
+    }
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 const login = asyncHandler(async (req, res) => {
   try {
     const { success, data } = signinSchema.safeParse(req.body);
     if (!success) {
-      throw new Error("Invalid input data");
+      return res.status(422).json({ success: false, message: "Invalid input data" });
     }
 
     const user = await teacherData.findOne({
@@ -74,20 +141,19 @@ const login = asyncHandler(async (req, res) => {
       password: data.password,
     });
 
-   
     if (user) {
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
-
       res.json({
         success: true,
         message: "I am Teacher",
         token,
       });
-    }else {
-      throw new Error("Error while logging in");
+    } else {
+      return res.status(401).json({ success: false, message: "Invalid email or password" });
     }
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error(error.message);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 });
 
@@ -95,16 +161,17 @@ const updateUser = asyncHandler(async (req, res) => {
   try {
     const { success, data } = updateSchema.safeParse(req.body);
     if (!success) {
-      throw new Error("Invalid input data");
+      return res.status(422).json({ success: false, message: "Invalid input data" });
     }
 
     await teacherData.updateOne({ _id: req.userId }, { $set: data });
 
-    res.json({
+    res.status(200).json({
       message: "Updated successfully",
     });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error(error.message);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 });
 
@@ -113,32 +180,26 @@ const getUsers = asyncHandler(async (req, res) => {
     const filter = req.query.filter || "";
     const users = await teacherData.find({
       $or: [
-        { firstName: { $regex: filter } },
-        { lastName: { $regex: filter } },
-        { email:    { $regex:filter}}
-        
+        { firstName: { $regex: filter, $options: "i" } },
+        { lastName: { $regex: filter, $options: "i" } },
+        { email: { $regex: filter, $options: "i" } },
       ],
     });
 
-    res.json({
+    res.status(200).json({
       users: users.map((user) => ({
         username: user.username,
         firstName: user.firstName,
         middleName: user.middleName,
         lastName: user.lastName,
-         role : user.role,
+        role: user.role,
         _id: user._id,
       })),
     });
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+    console.error(error.message);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
 
-module.exports = { register, login, updateUser, getUsers };
-
-
-
-
-
-
+module.exports = { register, login, updateUser, getUsers, verifyMail };
