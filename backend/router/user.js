@@ -1,6 +1,6 @@
 const express = require('express');
 const { authMiddleware } = require('../middleware/auth');
-const { register, login, updateUser, getUsers } = require('../controller/User');
+const { register, login, updateUser, getUsers, verifyMail } = require('../controller/User');
 
 const router = express.Router();
 
@@ -9,6 +9,8 @@ router.post('/signin',login);
 
 router.put("/",authMiddleware,updateUser);
 router.get("/bulk", authMiddleware,getUsers);
+
+router.get("verify",verifyMail)
 
 
 module.exports =router

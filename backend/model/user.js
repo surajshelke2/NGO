@@ -20,7 +20,7 @@ const StudentSchema = mongoose.Schema(
     rollNo: {
       type: String,
       required: [true, "Please provide your Roll No."],
-      index: { unique: true }, //Makes the field indexed for faster search
+      index: { unique: true },
       trim: true,
     },
     role: {
@@ -38,7 +38,6 @@ const StudentSchema = mongoose.Schema(
     middleName: {
       type: String,
       require: true,
-      unique: true,
       trim: true,
       lowercase: true,
       maxLength: 30,
@@ -117,6 +116,8 @@ const teacherSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
+},{
+  timestamps:true
 });
 
 const teacherData = mongoose.model("teacher", teacherSchema);

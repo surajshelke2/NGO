@@ -2,7 +2,7 @@ const z = require("zod");
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 const nodemailer = require("nodemailer");
-const { teacherData } = require("../model/User");
+const { teacherData, StudentData } = require("../model/User");
 const bcrypt = require("bcrypt");
 
 const signupSchema = z.object({
@@ -27,18 +27,29 @@ const updateSchema = z.object({
   degree: z.string().optional(),
 });
 
+//Register Mail Of the Students
+
 const register = asyncHandler(async (req, res) => {
   try {
     const { success, data } = signupSchema.safeParse(req.body);
 
     if (!success) {
-      return res.status(422).json({ success: false, message: "Invalid input data" });
+      return res
+        .status(422)
+        .json({ success: false, message: "Invalid input data" });
     }
 
     const existingUser = await teacherData.findOne({ email: data.email });
 
     if (existingUser) {
-      return res.status(409).json({ success: false, message: "Email already taken" });
+      return res
+        .status(409)
+        .json({ success: false, message: "Email already taken" });
+    }
+
+    const otherMailExist = await StudentData.findOne({ email: data.email });
+    if (otherMailExist) {
+      throw new Error("Email already taken");
     }
 
     const hashPassword = await bcrypt.hash(data.password, 10);
@@ -57,7 +68,6 @@ const register = asyncHandler(async (req, res) => {
     const token = jwt.sign({ userId }, process.env.JWT_SECRET);
 
     sendVerifyMail(data.firstName, data.email, userId);
-    
 
     res.status(201).json({
       success: true,
@@ -70,16 +80,17 @@ const register = asyncHandler(async (req, res) => {
   }
 });
 
+// Sned Verification
+
 const sendVerifyMail = asyncHandler(async (name, email, user_id) => {
   try {
-    
     const transporter = nodemailer.createTransport({
-      service:'gmail',
-      auth:{
-        user:process.env.EMAIL_USERNAME,
-        pass:process.env.EMAIL_PASSWORD,
-      }
-    })
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USERNAME,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
 
     const mailOptions = {
       from: process.env.EMAIL,
@@ -88,15 +99,14 @@ const sendVerifyMail = asyncHandler(async (name, email, user_id) => {
       html: `
       <h2>Hii ${name}</h2>
       <p>Click the following link to verify your email:</p>
-      <a href="${process.env.VERIFY_URL}/${user_id}">Verify Email</a>
+      <a href="http://localhost:4000/api/v1/user/teacher/verify?id=${user_id}">Verify Email</a>
     `,
-     text:'hello',
+      text: "hello",
     };
 
     await transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.error("Error sending verification email:", error.message);
-      
       }
       console.log("Verification email sent:", info);
     });
@@ -105,13 +115,15 @@ const sendVerifyMail = asyncHandler(async (name, email, user_id) => {
   }
 });
 
+// Verified Mail
+
 const verifyMail = asyncHandler(async (req, res) => {
   try {
     const updatedInfo = await teacherData.updateOne(
       { _id: req.query.id },
       {
         $set: {
-          isVerified: true,
+          isVerify: true,
         },
       }
     );
@@ -129,19 +141,31 @@ const verifyMail = asyncHandler(async (req, res) => {
   }
 });
 
+// Get Login Studnet
+
 const login = asyncHandler(async (req, res) => {
   try {
     const { success, data } = signinSchema.safeParse(req.body);
     if (!success) {
-      return res.status(422).json({ success: false, message: "Invalid input data" });
+      return res
+        .status(422)
+        .json({ success: false, message: "Invalid input data" });
     }
 
     const user = await teacherData.findOne({
       email: data.email,
-      password: data.password,
+      
     });
 
-    if (user) {
+    if (!user.isVerify) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Please verify your email before logging in" });
+    }
+
+    const passwordMatch = await bcrypt.compare(data.password, user.password);
+
+    if (passwordMatch) {
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
       res.json({
         success: true,
@@ -149,7 +173,9 @@ const login = asyncHandler(async (req, res) => {
         token,
       });
     } else {
-      return res.status(401).json({ success: false, message: "Invalid email or password" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid email or password" });
     }
   } catch (error) {
     console.error(error.message);
@@ -157,11 +183,15 @@ const login = asyncHandler(async (req, res) => {
   }
 });
 
+//Update Student
+
 const updateUser = asyncHandler(async (req, res) => {
   try {
     const { success, data } = updateSchema.safeParse(req.body);
     if (!success) {
-      return res.status(422).json({ success: false, message: "Invalid input data" });
+      return res
+        .status(422)
+        .json({ success: false, message: "Invalid input data" });
     }
 
     await teacherData.updateOne({ _id: req.userId }, { $set: data });
@@ -174,6 +204,8 @@ const updateUser = asyncHandler(async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 });
+
+//Get All Users
 
 const getUsers = asyncHandler(async (req, res) => {
   try {

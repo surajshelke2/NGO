@@ -2,6 +2,9 @@ const z = require("zod");
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 const { StudentData, teacherData } = require("../model/User");
+const nodemailer = require("nodemailer");
+const bcrypt = require("bcrypt");
+
 
 const signupSchema = z.object({
   email: z.string().email(),
@@ -23,7 +26,7 @@ const updateSchema = z.object({
   middleName: z.string().optional(),
 });
 
-let studentCounter = 1; // Initial counter value
+let studentCounter = 1; 
 
 function generateRollNumber() {
   const rollNumber = `RT${String(studentCounter).padStart(4, "0")}`;
@@ -42,10 +45,19 @@ const register = asyncHandler(async (req, res) => {
     if (existingUser) {
       throw new Error("Email already taken");
     }
+
+    //check in the other models
+
+    const otherMailExist = await teacherData.findOne({ email: data.email });
+    if (otherMailExist) {
+      throw new Error("Email already taken");
+    }
+
+    const hashPassword = await bcrypt.hash(data.password, 10);
     const roll_No = generateRollNumber();
     const user = await StudentData.create({
       email: data.email,
-      password: data.password,
+      password: hashPassword,
       firstName: data.firstName,
       middleName: data.middleName,
       lastName: data.lastName,
@@ -54,7 +66,7 @@ const register = asyncHandler(async (req, res) => {
 
     const userId = user._id;
     const token = jwt.sign({ userId }, process.env.JWT_SECRET);
-
+    sendVerifyMail(data.firstName, data.email, userId);
     res.json({
       message: "User created successfully",
 
@@ -62,6 +74,66 @@ const register = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+});
+// Sned Verification
+
+const sendVerifyMail = asyncHandler(async (name, email, user_id) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USERNAME,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: "Email Verification",
+      html: `
+      <h2>Hii ${name}</h2>
+      <p>Click the following link to verify your email:</p>
+      <a href="http://localhost:4000/api/v1/user/student/verify?id=${user_id}">Verify Email</a>
+    `,
+      text: "hello",
+    };
+
+    await transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error sending verification email:", error.message);
+      }
+      console.log("Verification email sent:", info);
+    });
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+// Verified Mail
+
+const verifyMail = asyncHandler(async (req, res) => {
+  try {
+    const updatedInfo = await StudentData.updateOne(
+      { _id: req.query.id },
+      {
+        $set: {
+          isVerify: true,
+        },
+      }
+    );
+
+    if (updatedInfo.nModified === 1) {
+      console.log("Email Verification Is Completed !!");
+      res.status(204).send();
+    } else {
+      console.log("User not found or already verified.");
+      res.status(404).send("User not found or already verified.");
+    }
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
   }
 });
 
@@ -74,11 +146,18 @@ const login = asyncHandler(async (req, res) => {
 
     const user = await StudentData.findOne({
       email: data.email,
-      password: data.password,
+     
     });
 
+    if (!user.isVerify) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Please verify your email before logging in" });
+    }
+
+    const passwordMatch = await bcrypt.compare(data.password, user.password);
   
-    if (user) {
+    if (passwordMatch) {
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
       res.json({
@@ -138,4 +217,4 @@ const getUsers = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { register, login, updateUser, getUsers };
+module.exports = { register, login, updateUser, getUsers,verifyMail };

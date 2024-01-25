@@ -7,6 +7,7 @@ const teacherRouter = require("./router/teacher");
 require("dotenv").config();
 const connectDB = require("./databases/data");
 const bodyParser = require("body-parser");
+const { verifyMail } = require("./controller/teacher");
 const app = express();
 
 connectDB();
