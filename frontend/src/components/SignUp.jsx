@@ -10,16 +10,29 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   // const upload = multer()
-  function HandleSubmit(e){
+  const HandleSubmit =  async(e)=>{
     e.preventDefault();
-    console.log({firstName,middleName,lastName,password,email});
-    axios.post("http://localhost:4000/api/v1/user/student/signup",{firstName,middleName,lastName,email,password}).then(()=>{
-      console.log("user registered successfully")
-      alert("check your email for verification");
-    }).catch((err)=>{
-      console.log("user not registered : ",err);
-      alert("user not registered try again");
-    })
+
+    try {
+
+      await axios.post("http://localhost:4000/api/v1/user/student/signup",
+      {
+        firstName,middleName,lastName,email,password
+      })
+      .then(()=>{
+        console.log("user registered successfully")
+        alert("check your email for verification");
+      }).catch((err)=>{
+        console.log("user not registered : ",err);
+        alert("user not registered try again");
+      })
+      
+    } catch (error) {
+
+      console.log(err.message)
+      
+    }
+   
 
     // console.log("data submitted");
   }

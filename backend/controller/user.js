@@ -26,14 +26,6 @@ const updateSchema = z.object({
   middleName: z.string().optional(),
 });
 
-let studentCounter = 1; 
-
-function generateRollNumber() {
-  const rollNumber = `RT${String(studentCounter).padStart(4, "0")}`;
-  studentCounter += 1;
-  return rollNumber;
-}
-
 const register = asyncHandler(async (req, res) => {
   try {
     const { success, data } = signupSchema.safeParse(req.body);
@@ -54,14 +46,14 @@ const register = asyncHandler(async (req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(data.password, 10);
-    const roll_No = generateRollNumber();
+
     const user = await StudentData.create({
       email: data.email,
       password: hashPassword,
       firstName: data.firstName,
       middleName: data.middleName,
       lastName: data.lastName,
-      rollNo: roll_No,
+      
     });
 
     const userId = user._id;

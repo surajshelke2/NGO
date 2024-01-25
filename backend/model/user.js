@@ -62,6 +62,12 @@ const StudentSchema = mongoose.Schema(
   }
 );
 
+
+try {
+  
+} catch (error) {
+  
+}
 StudentSchema.pre('save', async function(next) {
   const lastUser = await StudentData.findOne({}, {}, { sort: { 'rollNo': -1 } });
   this.rollNo = (lastUser && lastUser.rollNo + 1) || 1;
