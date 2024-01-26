@@ -10,13 +10,13 @@ const bodyParser = require("body-parser");
 const { verifyMail } = require("./controller/teacher");
 const app = express();
 
-connectDB();
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(helmet());
+app.use(express.json())
 
 // Routes
 
@@ -35,6 +35,13 @@ app.use((err, req, res, next) => {
 
 // Start the server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+(async()=>{
+  await connectDB();
+})().then(()=>{
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}).catch((err)=>{
+  console.log("server error")
+})
+
