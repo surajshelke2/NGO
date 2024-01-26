@@ -1,7 +1,7 @@
 const z = require("zod");
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
-const { StudentData, teacherData } = require("../model/User");
+const { StudentData, teacherData } = require("../model/user.js");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 

@@ -2,7 +2,7 @@ const z = require("zod");
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 const nodemailer = require("nodemailer");
-const { teacherData, StudentData } = require("../model/User");
+const { teacherData, StudentData } = require("../model/user.js");
 const bcrypt = require("bcrypt");
 
 const signupSchema = z.object({
