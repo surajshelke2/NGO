@@ -3,11 +3,12 @@ const cors = require("cors");
 const helmet = require("helmet");
 const  studentRouter = require('./router/user')
 const teacherRouter = require("./router/teacher");
+const classRouter = require('./router/class')
+const subjectRouter = require('./router/subject')
 
 require("dotenv").config();
 const connectDB = require("./databases/data");
 const bodyParser = require("body-parser");
-const { verifyMail } = require("./controller/teacher");
 const app = express();
 
 connectDB();
@@ -22,6 +23,8 @@ app.use(helmet());
 
 app.use("/api/v1/user/student", studentRouter);
 app.use("/api/v1/user/teacher", teacherRouter);
+app.use("/api/v1/class", classRouter);
+app.use("/api/v1/class/subject",subjectRouter)
 app.use("/api/v1", (req, res) => {
   console.log("App is running fine!!");
   res.json({ message: "App is running fine...." });

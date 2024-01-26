@@ -10,7 +10,7 @@ router.post('/signin',login);
 router.put("/",authMiddleware,updateUser);
 router.get("/bulk", authMiddleware,getUsers);
 
-router.get("verify",verifyMail)
+router.get("/verify",verifyMail)
 
 
 module.exports =router
