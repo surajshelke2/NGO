@@ -5,6 +5,7 @@ const  studentRouter = require('./router/user')
 const teacherRouter = require("./router/teacher");
 const classRouter = require('./router/class')
 const subjectRouter = require('./router/subject')
+const unitRouter = require("./router/unit");
 
 require("dotenv").config();
 const connectDB = require("./databases/data");
@@ -25,6 +26,7 @@ app.use("/api/v1/user/student", studentRouter);
 app.use("/api/v1/user/teacher", teacherRouter);
 app.use("/api/v1/class", classRouter);
 app.use("/api/v1/class/subject",subjectRouter)
+app.use("/api/v1/class/subject/unit",unitRouter)
 app.use("/api/v1", (req, res) => {
   console.log("App is running fine!!");
   res.json({ message: "App is running fine...." });

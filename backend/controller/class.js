@@ -38,12 +38,12 @@ const createNewClass = asynchandler(async (req, res) => {
       className: data.className,
     });
 
-    const fullClass = await Class.findOne({ _id: class1._id }).populate(
-      "subjects"
-    );
+    // const fullClass = await Class.findOne({ _id: class1._id }).populate(
+    //   "subjects"
+    // );
 
     return res.status(200).json({
-      data: fullClass,
+      data: class1,
       message: "Class is created",
       success: true,
     });
@@ -103,7 +103,7 @@ const deleteClass = asynchandler(async (req, res) => {
 
     }
 
-    console.log(exitsClass)
+ 
     await Class.deleteOne({ _id: classId });
     console.log("Data is Deleted")
     res.status(204).json({

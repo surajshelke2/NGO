@@ -136,6 +136,9 @@ const login = asyncHandler(async (req, res) => {
       throw new Error("Invalid input data");
     }
 
+    if(!user){
+      
+    }
     const user = await StudentData.findOne({
       email: data.email,
      

@@ -20,12 +20,7 @@ const subjectSchema = mongoose.Schema({
     type: String,
     required: [true, "Subject name is required"],
     unique:true
-  },
-  classID: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Class"
-  }
-  ,
+  } ,
   units: [{ type: mongoose.Schema.Types.ObjectId, ref: "Unit" }],
 });
 
@@ -38,6 +33,8 @@ const unitSchema = mongoose.Schema({
 const contentSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String },
+  fileURL: { type: String },
+
 });
 
 const resultSchema = new mongoose.Schema(
@@ -59,46 +56,6 @@ const resultSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// triggers
-
-// Define pre-delete hook for class
-classSchema.pre("deleteOne", { document: true }, async function (next) {
-  const classId = this._conditions._id;
-
-  try {
-    // Delete associated subjects
-    await mongoose.model("Subject").deleteMany({ class: classId });
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
-
-// Define pre-delete hook for subject
-subjectSchema.pre("deleteOne", async function (next) {
-  const subjectId = this._conditions._id;
-
-  try {
-    // Delete associated units
-    await mongoose.model("Unit").deleteMany({ subject: subjectId });
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
-
-// Define pre-delete hook for unit
-unitSchema.pre("deleteOne", async function (next) {
-  const unitId = this._conditions._id;
-
-  try {
-    // Delete associated contents
-    await mongoose.model("Content").deleteMany({ unit: unitId });
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
 
 const Result = mongoose.model("Result", resultSchema);
 const Content = mongoose.model("Content", contentSchema);

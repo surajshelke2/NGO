@@ -1,4 +1,4 @@
-const { Subject } = require("../model/class");
+const { Subject, Class } = require("../model/class");
 const asyncHandler = require("express-async-handler");
 const z = require("zod");
 
@@ -51,8 +51,12 @@ const createNewSubject = asyncHandler(async (req, res) => {
     // Create the subject and associate it with the specified class
     const subject = await Subject.create({
       subjectName: data.subjectName,
-      classID: classID, // Assuming classID is provided in the request body
+      classID: classID, 
     });
+
+    const class1 = await Class.findOne({_id:classID});
+    class1.subjects.push(subject._id);
+    await class1.save();
 
     res.status(200).json({
       success: true,
@@ -78,9 +82,21 @@ const createNewSubject = asyncHandler(async (req, res) => {
 
 const deleteSubject = asyncHandler(async (req, res) => {
   try {
-    const subjectId = req.params;
+    const {subjectId} = req.query;
 
-    await Class.deleteOne({ _id: subjectId });
+    const deleteSub =await Subject.findByIdAndDelete(subjectId);
+
+    if(!deleteSub){
+
+      throw new Error("Subject not Found")
+    }
+
+    await Class.updateMany(
+      {subjects:deleteSub._id},
+      {$pull:{subjects:deleteSub._id}}
+    )
+
+
     res.status(200).json({
       success: true,
       message: "Subject has been Deleted",
