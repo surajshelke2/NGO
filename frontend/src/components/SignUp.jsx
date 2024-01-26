@@ -1,6 +1,7 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdCastForEducation } from "react-icons/md";
+import { useLocation } from "react-router-dom";
 
 
 export default function SignUp() {
@@ -9,12 +10,16 @@ export default function SignUp() {
   const [lastName, setLastname] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [role,setRole] = useState("");
+  const location = useLocation();
   // const upload = multer()
+  useEffect(()=>{
+    setRole(location.search.split("=")[1]);
+  },[])
   const HandleSubmit =  async(e)=>{
     e.preventDefault();
-
-    try {
-
+    if(role === 'student')
+    {
       await axios.post("http://localhost:4000/api/v1/user/student/signup",
       {
         firstName,middleName,lastName,email,password
@@ -26,16 +31,23 @@ export default function SignUp() {
         console.log("user not registered : ",err);
         alert("user not registered try again");
       })
-      
-    } catch (error) {
-
-      console.log(err.message)
-      
     }
-   
-
-    // console.log("data submitted");
+    else if(role === 'teacher')
+    {
+      await axios.post("http://localhost:4000/api/v1/user/teacher/signup",
+      {
+        firstName,middleName,lastName,email,password,degree:"phd"
+      })
+      .then(()=>{
+        console.log("user registered successfully")
+        alert("check your email for verification");
+      }).catch((err)=>{
+        console.log("user not registered : ",err);
+        alert("user not registered try again");
+      })
+    }
   }
+
   return (
     <div>
     <div className="flex m-auto gap-1 text-emerald-700 w-fit align-middle flex-col items-center bold my-8 text-3xl font-medium max-sm:text-2xl">

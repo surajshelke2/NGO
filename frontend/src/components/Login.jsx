@@ -1,24 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdCastForEducation } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 
 export default function Login() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-
+  const [role,setRole] = useState("");
+  const location = useLocation();
   // handler to submit data
-
-  function HandleSubmit(e) {
-    e.preventDefault();
-      axios
+  useEffect(()=>{
+    setRole(location.search.split("=")[1]);
+    function HandleSubmit(e) {
+      e.preventDefault();
+      if(role === 'student'){
+        axios
         .post("http://localhost:4000/api/v1/user/student/signin", {
           email,
           password,
         })
         .then(() => alert("logged in "))
         .catch((err) => alert("something went wrong in login : "));
-  }
+      }
+      else if(role === 'teacher')
+      {
+        axios
+        .post("http://localhost:4000/api/v1/user/teacher/signin", {
+          email,
+          password,
+        })
+        .then(() => alert("logged in "))
+        .catch((err) => alert("something went wrong in login : "));
+      }
+      else{
+        alert("check your URL again");
+      }
+    }
+  },[])
+
   return (
     <div>
       <div className="flex m-auto gap-1 text-emerald-700 w-fit align-middle flex-col items-center bold my-8 text-3xl font-medium max-sm:text-2xl">
@@ -58,7 +77,7 @@ export default function Login() {
               foreget passoword?
             </div>
           </Link>
-          <Link to="/user/register">
+          <Link to={`/user/register/?role=${role}`}>
             <div className="text-center my-1 text-indigo-400 max-sm:text-sm">
               Not have an Account ?
             </div>
