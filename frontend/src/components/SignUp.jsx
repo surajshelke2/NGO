@@ -12,7 +12,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [role,setRole] = useState("");
-  const [emailDialogBox,setEmailDialogBox] = useState("0%");
+  const [emailDialogBox,setEmailDialogBox] = useState("-150%");
   const location = useLocation();
   // const upload = multer()
   useEffect(()=>{
@@ -108,9 +108,11 @@ export default function SignUp() {
       </form>
     </div>
     <div className="absolute w-full z-10" style={{top:emailDialogBox,height:"100%"}}>
-    <div className='w-1/4 left-1/3 bg-slate-400  m-auto'>
-        <img src={emailIcon} alt="" width="100px"/>
-        check your email for verification
+    <div className='w-1/4 left-1/3 bg-slate-400  m-auto text-center p-6 rounded-lg'>
+        <img src={emailIcon} alt="" width="100px" className="m-auto"/>
+        <h2 className="font-bold text-2xl my-2">Thank you for registering.</h2>
+        <p>We're glad you are here Before you start exploring,we just sent you the email confirmation.</p>
+        <p>Please confirm your email</p>
       </div>
     </div>
     </div>
