@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import studetnLoginImage from '/images/studentLogin.png'
+import emailIcon from '/images/emailIcon.png'
 
 
 export default function SignUp() {
@@ -11,6 +12,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [role,setRole] = useState("");
+  const [emailDialogBox,setEmailDialogBox] = useState("0%");
   const location = useLocation();
   // const upload = multer()
   useEffect(()=>{
@@ -41,7 +43,7 @@ export default function SignUp() {
       })
       .then(()=>{
         console.log("user registered successfully")
-        alert("check your email for verification");
+        setEmailDialogBox("0%");
       }).catch((err)=>{
         console.log("user not registered : ",err);
         alert("user not registered try again");
@@ -50,7 +52,7 @@ export default function SignUp() {
   }
 
   return (
-    <div className="flex w-screen gap-18 justify-center max-sm:flex-col">
+    <div className="flex w-screen gap-18 justify-center max-sm:flex-col relative">
       <div className="flex gap-1 w-fit align-middle flex-col items-center bold my-8 text-3xl font-medium max-sm:text-2xl max-sm:m-auto">
         <img src={studetnLoginImage} alt="" width="100%"/>
       </div>
@@ -104,6 +106,12 @@ export default function SignUp() {
             Register
           </button>
       </form>
+    </div>
+    <div className="absolute w-full z-10" style={{top:emailDialogBox,height:"100%"}}>
+    <div className='w-1/4 left-1/3 bg-slate-400  m-auto'>
+        <img src={emailIcon} alt="" width="100px"/>
+        check your email for verification
+      </div>
     </div>
     </div>
   );
