@@ -3,7 +3,7 @@ import img from "../../img/logo.png";
 
 const ClassNavBar = () => {
   return (
-    <nav className="bg-green-500 mx-auto px-2 sm:px-6 lg:px-8">
+    <nav className="sm:px-6 lg:px-8 w-full px-18 py-2 sticky top-0 z-50 bg-white">
       <div className="flex items-center justify-between h-16">
         <div className="flex-shrink-0">
           <img src={img} className="h-20 p-1 w-21" alt="Logo" />

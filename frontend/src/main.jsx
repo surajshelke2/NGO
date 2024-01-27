@@ -6,12 +6,8 @@ import Layout from './Layout.jsx'
 import Home from './components/Home.jsx'
 import Login from './components/Login.jsx'
 import SignUp from './components/SignUp.jsx'
-<<<<<<< HEAD
 import ClassNavBar from './components/navbars/ClassNavBar.jsx'
-import ClassesPage from './pages/ClassesPage.jsx'
-=======
 import ClassesPage from './components/class/ClassesPage.jsx'
->>>>>>> 5335a50 (design some frontend)
 
 const router = createBrowserRouter(
   createRoutesFromElements(
