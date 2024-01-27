@@ -136,13 +136,14 @@ const login = asyncHandler(async (req, res) => {
       throw new Error("Invalid input data");
     }
 
-    if(!user){
-      
-    }
     const user = await StudentData.findOne({
       email: data.email,
      
     });
+    
+    if(!user){
+      throw new Error("user doesn't exist")
+    }
 
     if (!user.isVerify) {
       return res

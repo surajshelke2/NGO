@@ -15,7 +15,8 @@ export default function SignUp() {
   // const upload = multer()
   useEffect(()=>{
     setRole(location.search.split("=")[1]);
-  },[])
+  },[location])
+
   const HandleSubmit =  async(e)=>{
     e.preventDefault();
     if(role === 'student')
