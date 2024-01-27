@@ -8,6 +8,11 @@ const classSchema = mongoose.Schema(
       trim: true,
       unique: true,
     },
+    classCode:{
+      type:Number,
+      required:[true,"Please Proivde the class Number"],
+      unique:true
+    },
     subjects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Subject" }],
   },
   {

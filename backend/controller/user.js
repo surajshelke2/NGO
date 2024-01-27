@@ -38,8 +38,6 @@ const register = asyncHandler(async (req, res) => {
       throw new Error("Email already taken");
     }
 
-    //check in the other models
-
     const otherMailExist = await teacherData.findOne({ email: data.email });
     if (otherMailExist) {
       throw new Error("Email already taken");
@@ -53,7 +51,6 @@ const register = asyncHandler(async (req, res) => {
       firstName: data.firstName,
       middleName: data.middleName,
       lastName: data.lastName,
-      
     });
 
     const userId = user._id;
@@ -61,14 +58,13 @@ const register = asyncHandler(async (req, res) => {
     sendVerifyMail(data.firstName, data.email, userId);
     res.json({
       message: "User created successfully",
-
       token: token,
     });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error("Error in register:", error.message);
+    res.status(400).send(error.message);
   }
 });
-// Sned Verification
 
 const sendVerifyMail = asyncHandler(async (name, email, user_id) => {
   try {
@@ -95,25 +91,21 @@ const sendVerifyMail = asyncHandler(async (name, email, user_id) => {
     await transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.error("Error sending verification email:", error.message);
+        throw new Error("Failed to send verification email");
       }
       console.log("Verification email sent:", info);
     });
   } catch (error) {
-    console.error(error.message);
+    console.error("Error sending verification email:", error.message);
+    throw new Error("Failed to send verification email");
   }
 });
-
-// Verified Mail
 
 const verifyMail = asyncHandler(async (req, res) => {
   try {
     const updatedInfo = await StudentData.updateOne(
       { _id: req.query.id },
-      {
-        $set: {
-          isVerify: true,
-        },
-      }
+      { $set: { isVerify: true } }
     );
 
     if (updatedInfo.nModified === 1) {
@@ -124,8 +116,8 @@ const verifyMail = asyncHandler(async (req, res) => {
       res.status(404).send("User not found or already verified.");
     }
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send("Internal Server Error");
+    console.error("Error in verifyMail:", error.message);
+    res.status(500).send("Failed to verify email");
   }
 });
 
@@ -136,13 +128,11 @@ const login = asyncHandler(async (req, res) => {
       throw new Error("Invalid input data");
     }
 
-    const user = await StudentData.findOne({
-      email: data.email,
-     
-    });
+    const user = await StudentData.findOne({ email: data.email });
+    console.log(user)
     
     if(!user){
-      throw new Error("user doesn't exist")
+      throw new Error("User doesn't exist");
     }
 
     if (!user.isVerify) {
@@ -156,16 +146,19 @@ const login = asyncHandler(async (req, res) => {
     if (passwordMatch) {
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
-      res.json({
+      res.status(200).json({
         success: true,
-        message: "I am Student",
-        token,
+        message: "Logged in successfully",
+        token:token,
       });
+
+    
     }  else {
-      throw new Error("Error while logging in");
+      throw new Error("Incorrect email or password");
     }
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error("Error in login:", error.message);
+    res.status(400).send(error.message);
   }
 });
 
@@ -182,7 +175,8 @@ const updateUser = asyncHandler(async (req, res) => {
       message: "Updated successfully",
     });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error("Error in updateUser:", error.message);
+    res.status(400).send(error.message);
   }
 });
 
@@ -209,8 +203,9 @@ const getUsers = asyncHandler(async (req, res) => {
       })),
     });
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error in getUsers:", error.message);
+    res.status(500).send("Internal server error");
   }
 });
 
-module.exports = { register, login, updateUser, getUsers,verifyMail };
+module.exports = { register, login, updateUser, getUsers, verifyMail };

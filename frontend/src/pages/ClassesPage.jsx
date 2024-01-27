@@ -1,33 +1,51 @@
 import { useState, useEffect } from "react";
-import ClassNavBar from "../components/navbars/ClassNavBar";
-import axios from "axios";
+
+
 
 export default function ClassesPage() {
-  const [className, setClassName] = useState('');
-  const [classCode, setClassCode] = useState('');
-  const [classData, setClassData] = useState(null);
+  const [className, setClassName] = useState("");
+  const [classCode, setClassCode] = useState("");
+  const [classData, setClassData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get('http://localhost:4000/api/v1/class');
-        setClassData(data);
+        const { data } = await axios.get("http://localhost:4000/api/v1/class");
+        setClassData(data.classes);
+        console.log(data)
       } catch (error) {
-        console.error('Error fetching class data:', error);
+        console.error("Error fetching class data:", error);
       }
     };
 
     fetchData();
   }, []);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your form submission logic here
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/class/add",
+        {
+          className: className,
+          classCode: classCode,
+        }
+      );
+  
+  
+      await setClassData([...classData, response.data]);
+  
+   
+      setClassName("");
+      setClassCode("");
+      setLoading(false);
+    } catch (error) {
+      console.error("Error while adding class:", error);
+      setLoading(false);
+    }
   }
-
-  if (!classData) {
-    return <div>Loading...</div>;
-  }
+  
 
   return (
     <>
@@ -36,7 +54,9 @@ export default function ClassesPage() {
         <form onSubmit={handleSubmit} className="flex flex-col">
           <h3 className="font-bold text-center">Add Class</h3>
           <div className="flex flex-row items-center mt-4">
-            <label htmlFor="className" className="mx-3 font-semibold">Class Name:</label>
+            <label htmlFor="className" className="mx-3 font-semibold">
+              Class Name:
+            </label>
             <input
               type="text"
               id="className"
@@ -48,7 +68,9 @@ export default function ClassesPage() {
             />
           </div>
           <div className="flex flex-row items-center mt-4">
-            <label htmlFor="classCode" className="mx-3 font-semibold">Class Code:</label>
+            <label htmlFor="classCode" className="mx-3 font-semibold">
+              Class Code:
+            </label>
             <input
               type="text"
               id="classCode"
@@ -70,15 +92,24 @@ export default function ClassesPage() {
 
       <hr className="border my-8" />
 
-      <div className="container">
-       
-        {classData.map((classItem, index) => (
-          <div key={index} className="bg-red-300 max-w-xs p-4 rounded-lg shadow-lg mx-10 mt-10 max-auto md:mx-w-sm sm:mx-w-sm">
-          
-            <h1>{classItem.className}</h1>
-          </div>
-        ))}
+      <div className="container flex ">
+  {loading ? (
+    <div className="text-center mt-4">Loading...</div>
+  ) : classData && classData.length > 0 ? (
+    classData.map((classItem, index) => (
+      <div className="flex max-w-sm">
+      <div key={index} className="bg-red-300 max-w-xs p-4 rounded-lg shadow-lg mx-10 mt-10 max-auto md:mx-w-sm sm:mx-w-sm">
+        <h1>{classItem.className}</h1>
+        <h1>{classItem.classCode}</h1>
       </div>
+      </div>
+    ))
+  ) : (
+    <div className="text-center mt-4">No classes have been added.</div>
+  )}
+</div>
+
+
     </>
   );
 }

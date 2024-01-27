@@ -15,7 +15,7 @@ const authMiddleware = asyncHandler( async (req, res, next) => {
 
     // Now you can access decoded.userId
     req.userId = decoded.userId;
-    console.log(req.userId);
+  
 
     next();
   } catch (error) {

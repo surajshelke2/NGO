@@ -19,37 +19,61 @@ export default function SignUp() {
     setRole(location.search.split("=")[1]);
   },[location])
 
-  const HandleSubmit =  async(e)=>{
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if(role === 'student')
-    {
-      await axios.post("http://localhost:4000/api/v1/user/student/signup",
-      {
-        firstName,middleName,lastName,email,password
-      })
-      .then(()=>{
-        console.log("user registered successfully")
-        alert("check your email for verification");
-      }).catch((err)=>{
-        console.log("user not registered : ",err);
-        alert("user not registered try again");
-      })
+
+    
+      if (role === 'student') {
+        await registerStudent();
+      } else if (role === 'teacher') {
+        await registerTeacher();
+      }
+    
+  };
+
+  const registerStudent = async () => {
+    try {
+      const { response } = await axios.post("http://localhost:4000/api/v1/user/student/signup", {
+        firstName,
+        middleName,
+        lastName,
+        email,
+        password
+      });
+      console.log("User registered successfully");
+      console.log(response.data);
+      alert(response.data);
+    } catch (error) {
+      if (error.response) {
+        console.error("Error occurred during registration:", error.response.data);
+        alert("User registration failed. Error: " + error.response.data);
+      } else {
+        console.error("Error occurred during registration:", error.message);
+        alert("User registration failed. Please try again.");
+      }
     }
-    else if(role === 'teacher')
-    {
-      await axios.post("http://localhost:4000/api/v1/user/teacher/signup",
-      {
-        firstName,middleName,lastName,email,password,degree:"phd"
-      })
-      .then(()=>{
-        console.log("user registered successfully")
-        setEmailDialogBox("0%");
-      }).catch((err)=>{
-        console.log("user not registered : ",err);
-        alert("user not registered try again");
-      })
-    }
+  };
+  
+  const registerTeacher = async () => {
+    try{
+    const {response} = await axios.post("http://localhost:4000/api/v1/user/teacher/signup", {
+      firstName,
+      middleName,
+      lastName,
+      email,
+      password,
+      degree: "phd"
+    });
+    console.log("User registered successfully" ,response.data);
+    setEmailDialogBox(true);
+
+  }catch (error) {
+      
+    alert("User Registration Failed. Error: " + error.response.data);
   }
+  };
 
   return (
     <div className="flex w-screen gap-18 justify-center max-sm:flex-col relative">
@@ -57,7 +81,7 @@ export default function SignUp() {
         <img src={studetnLoginImage} alt="" width="100%"/>
       </div>
       <div className="max-lg:w-1/2 max-sm:w-4/5 h-fit my-auto w-1/3 max-sm:m-auto">
-      <form onSubmit={(e)=>HandleSubmit(e)}>
+      <form onSubmit={(e)=>handleSubmit(e)}>
         <input
           type="text"
           placeholder="firstname"

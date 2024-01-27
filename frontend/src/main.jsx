@@ -6,7 +6,6 @@ import Layout from './Layout.jsx'
 import Home from './components/Home.jsx'
 import Login from './components/Login.jsx'
 import SignUp from './components/SignUp.jsx'
-import ClassNavBar from './components/navbars/ClassNavBar.jsx'
 import ClassesPage from './components/class/ClassesPage.jsx'
 
 const router = createBrowserRouter(
