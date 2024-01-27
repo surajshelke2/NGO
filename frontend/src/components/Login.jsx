@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { MdCastForEducation } from "react-icons/md";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation , useNavigate} from "react-router-dom";  
 import axios from "axios";
 
 export default function Login() {
@@ -8,35 +8,43 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [role,setRole] = useState("");
   const location = useLocation();
+  const navigate = useNavigate();
+
   // handler to submit data
   useEffect(()=>{
     setRole(location.search.split("=")[1]);
-    function HandleSubmit(e) {
-      e.preventDefault();
-      if(role === 'student'){
-        axios
-        .post("http://localhost:4000/api/v1/user/student/signin", {
-          email,
-          password,
-        })
-        .then(() => alert("logged in "))
-        .catch((err) => alert("something went wrong in login : "));
-      }
-      else if(role === 'teacher')
-      {
-        axios
-        .post("http://localhost:4000/api/v1/user/teacher/signin", {
-          email,
-          password,
-        })
-        .then(() => alert("logged in "))
-        .catch((err) => alert("something went wrong in login : "));
-      }
-      else{
-        alert("check your URL again");
-      }
+  },[location])
+
+
+  function HandleSubmit(e) {
+    e.preventDefault();
+    if(role === 'student'){
+      axios
+      .post("http://localhost:4000/api/v1/user/student/signin", {
+        email,
+        password,
+      })
+      .then(() => {
+        navigate(`/user/class?role=${role}`)
+      })
+      .catch((err) => console.log(err.response ? err.response.data.message : err));
     }
-  },[])
+    else if(role === 'teacher')
+    {
+      axios
+      .post("http://localhost:4000/api/v1/user/teacher/signin", {
+        email,
+        password,
+      })
+      .then((res) => {
+        navigate(`/user/class?role=${role}`)
+      })
+      .catch((err) => console.log(err.response ? err.response.data.message : err));
+    }
+    else{
+      alert("check your URL again");
+    }
+  }
 
   return (
     <div>
@@ -70,7 +78,7 @@ export default function Login() {
             className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
           focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 bg-emerald-700 text-white hover:bg-emerald-800"
           >
-            Register
+            Login
           </button>
           <Link>
             <div className="text-end my-1 text-indigo-400 max-sm:text-sm">

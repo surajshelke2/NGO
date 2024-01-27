@@ -156,6 +156,9 @@ const login = asyncHandler(async (req, res) => {
       email: data.email,
       
     });
+    if(!user){
+      throw new Error("user doesn't exist")
+    }
 
     if (!user.isVerify) {
       return res
