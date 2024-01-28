@@ -8,66 +8,52 @@ export default function Login() {
   const [password, setPassword] = useState("");
 
   const [role, setRole] = useState("");
-
+  const [error, setError] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
 
   // handler to submit data
   useEffect(() => {
     setRole(location.search.split("=")[1]);
-  }, [location]);
+  }, [location, error]);
+
   async function HandleSubmit(e) {
     e.preventDefault();
     if (role === "student") {
-      try {
-        const config = {
-          headers: {
-            "Content-type": "application/json",
-          },
-        };
-        const { data } = await axios.post(
-          "http://localhost:4000/api/v1/user/student/signin",
-          {
-            email,
-            password,
-          },
-          config
-        );
-        console.log(data);
-        localStorage.setItem("userInfo", JSON.stringify(data));
-        console.log(data.token);
-        navigate(`/user/class?role=${role}`);
-      } catch (error) {
-        console.log("error");
-      }
+      await axios
+        .post("http://localhost:4000/api/v1/user/student/signin", {
+          email,
+          password,
+        })
+        .then((res) => {
+          res.data ? localStorage.setItem("userInfo", JSON.stringify(res.data)) : null;
+          navigate(`/user/class?role=${role}`);
+        })
+        .catch((err) => {
+          console.log(err.response.data.message);
+          setError(err.response.data.message);
+          console.log(error);
+        });
     } else if (role === "teacher") {
-      try {
-        const config = {
-          headers: {
-            "Content-type": "application/json",
-          },
-        };
-
-        const { data } = await axios.post(
-          "http://localhost:4000/api/v1/user/teacher/signin",
-          {
-            email,
-            password,
-          },
-          config
-        );
-        localStorage.setItem("token", JSON.stringify(data));
-        navigate(`/user/class?role=${role}`);
-      } catch (error) {
-        console.log("errorin login.jsx ");
-      }
+      await axios
+        .post("http://localhost:4000/api/v1/user/teacher/signin", {
+          email,
+          password,
+        })
+        .then((res) => {
+          res.data ? localStorage.setItem("userInfo", JSON.stringify(res.data)) : null;
+          navigate(`/user/class?role=${role}`);
+        })
+        .catch((err) => {
+          setError(err.response.data.message);
+        });
     } else {
-      alert("Check your URL again");
+      setError("check Your Url!");
     }
   }
 
   return (
-    <div className="flex w-screen gap-18 justify-center max-sm:flex-col">
+    <div className="flex gap-18 justify-center max-sm:flex-col">
       <div className="flex gap-1 w-fit align-middle flex-col items-center bold my-8 text-3xl font-medium max-sm:text-2xl max-sm:m-auto">
         <img src={studetnLoginImage} alt="" width="100%" />
       </div>
@@ -110,6 +96,14 @@ export default function Login() {
             </div>
           </Link>
         </form>
+      </div>
+      <div className="w-full bg-black absolute z-50 h-full bg-opacity-70" style={{top:error?'0%':'-200%'}}>
+        <div className="bg-slate-700 w-fit p-4 text-white m-auto mt-14 rounded-lg flex flex-col">
+           <h3 className="text-center text-xl">{error}</h3>
+           <button className="bg-lime-700 px-4 py-2 rounded-lg w-fit m-auto mt-3" onClick={()=>{
+            setError("");
+            }}>Close</button>
+        </div>
       </div>
     </div>
   );
