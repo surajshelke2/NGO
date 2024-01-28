@@ -17,7 +17,7 @@ const getAllClasses = asynchandler(async (req, res) => {
   else {
     return res.status(200).json({
       success: true,
-      data: classes,
+      classes,
     });
   }
 });
@@ -36,6 +36,7 @@ const createNewClass = asynchandler(async (req, res) => {
 
     const class1 = await Class.create({
       className: data.className,
+      classCode:data.classCode
     });
 
     // const fullClass = await Class.findOne({ _id: class1._id }).populate(
