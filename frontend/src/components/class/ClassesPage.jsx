@@ -54,7 +54,7 @@ export default function ClassesPage() {
   return (
     <>
       <ClassNavBar />
-       <button className="bg-orange-400 py-2 rounded-md mx-4 px-4 mt-2" onClick={HandleAddClass}>
+       <button className="bg-orange-400 py-2 rounded-md mx-4 px-4 mt-2 hidden max-md:block" onClick={HandleAddClass}>
               Add Class
         </button>
       <div className="flex">
@@ -70,6 +70,7 @@ export default function ClassesPage() {
 
         <div className="w-1/3 p-4 rounded-lg mx-auto max-md:absolute max-md:h-screen max-md:bg-black max-md:w-full max-md:z-50 max-md:bg-opacity-80" style={{top:AddClassDialog}}>
           <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col max-md:w-2/3 max-md:m-auto bg-white max-md:p-4 max-md:rounded-lg max-md:m-50px max-sm:w-10/12">
+            <button className="text-end m-2 text-xl hidden max-md:block" onClick={()=>setAddClassDialog("-200%")}>X</button>
             <button className="bg-orange-400 p-2 w-full rounded-md">
               Add Class Here!
             </button>
