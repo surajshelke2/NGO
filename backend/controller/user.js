@@ -124,6 +124,7 @@ const verifyMail = asyncHandler(async (req, res) => {
 const login = asyncHandler(async (req, res) => {
   try {
     const { success, data } = signinSchema.safeParse(req.body);
+    console.log(data)
     if (!success) {
       throw new Error("Invalid input data");
     }

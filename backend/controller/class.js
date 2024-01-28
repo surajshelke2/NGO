@@ -1,17 +1,10 @@
 const asynchandler = require("express-async-handler");
 const { Class } = require("../model/class");
-const z = require("zod");
-
-const classSchema = z.object({
-  className: z.string().min(1),
-  subject: z.array(z.string()).optional(),
-});
 
 const getAllClasses = asynchandler(async (req, res) => {
-  //   console.log(req);
-
+    // console.log(req);
   const classes = await Class.find({}).populate("subjects");
-
+  console.log(classes)
   if (!classes || classes.length == 0)
     return res.status(200).json({ message: "classes Are not allocated" });
   else {
@@ -24,27 +17,23 @@ const getAllClasses = asynchandler(async (req, res) => {
 
 const createNewClass = asynchandler(async (req, res) => {
   try {
-    let { success, data } = classSchema.safeParse(req.body);
-    console.log(req.body);
-    if (!success) {
-      throw new Error("Enter the Valid data");
-    }
-
+    const {className,classCode,classTeacher} = req.body;
+    data = {className,classCode,classTeacher};
+    console.log({className,classCode,classTeacher});
     if (!data) {
       throw new Error("The data is empty !!");
     }
-
-    const class1 = await Class.create({
-      className: data.className,
-      classCode:data.classCode
-    });
+    const existingClass = await Class.findOne({className,classCode});
+    if(existingClass)
+    throw new Error("Class already exists");
+    const class1 = await Class.create({className,classCode,classTeacher});
 
     // const fullClass = await Class.findOne({ _id: class1._id }).populate(
     //   "subjects"
     // );
 
     return res.status(200).json({
-      data: class1,
+      data: data,
       message: "Class is created",
       success: true,
     });
