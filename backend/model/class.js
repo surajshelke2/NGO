@@ -14,11 +14,6 @@ const classSchema = mongoose.Schema(
       type : String,
       required : true
     },
-    classCode:{
-      type:Number,
-      required:[true,"Please Proivde the class Number"],
-      unique:true
-    },
     subjects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Subject" }],
   },
   {

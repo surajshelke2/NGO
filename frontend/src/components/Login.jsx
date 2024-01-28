@@ -8,7 +8,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
 
   const [role, setRole] = useState("");
- 
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -16,71 +16,54 @@ export default function Login() {
   useEffect(() => {
     setRole(location.search.split("=")[1]);
   }, [location]);
-
   async function HandleSubmit(e) {
     e.preventDefault();
-
-    if (!email || !password) {
-      alert("Please fill all the details !!");
-    } 
-    
-      if (role === "student") {
-        try {
-          const config = {
-            headers: {
-              "Content-type": "application/json",
-            },
-          };
-
-        
-
-          const { data } = await axios.post(
-            "http://localhost:4000/api/v1/user/student/signin",
-            {
-              email,
-              password,
-            },
-            config
-          );
-          console.log(data)
-
-          localStorage.setItem("userInfo",JSON.stringify(data));
-          console.log(data.token);
-       
-          navigate(`/user/class?role=${role}`);
-          
-        } catch (error) {
-          console.log(error)
-        
-        }
-      } else if (role === "teacher") {
-        try {
-          const config = {
-            headers: {
-              "Content-type": "application/json",
-            },
-          };
-
-          const { data } = await axios.post(
-            "http://localhost:4000/api/v1/user/teacher/signup",
-            {
-              email,
-              password,
-            },
-            config
-          );
-
-          localStorage.setItem("token", JSON.stringify(data));
-          navigate(`/user/class?role=${role}`);
-          
-        } catch (error) {
-         console.log(error)
-          
-        }
-      } else {
-        alert("Check your URL again");
+    if (role === "student") {
+      try {
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+        const { data } = await axios.post(
+          "http://localhost:4000/api/v1/user/student/signin",
+          {
+            email,
+            password,
+          },
+          config
+        );
+        console.log(data);
+        localStorage.setItem("userInfo", JSON.stringify(data));
+        console.log(data.token);
+        navigate(`/user/class?role=${role}`);
+      } catch (error) {
+        console.log("error");
       }
-    
+    } else if (role === "teacher") {
+      try {
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+
+        const { data } = await axios.post(
+          "http://localhost:4000/api/v1/user/teacher/signin",
+          {
+            email,
+            password,
+          },
+          config
+        );
+        localStorage.setItem("token", JSON.stringify(data));
+        navigate(`/user/class?role=${role}`);
+      } catch (error) {
+        console.log("errorin login.jsx ");
+      }
+    } else {
+      alert("Check your URL again");
+    }
   }
 
   return (

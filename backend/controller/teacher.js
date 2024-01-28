@@ -146,15 +146,14 @@ const verifyMail = asyncHandler(async (req, res) => {
 const login = asyncHandler(async (req, res) => {
   try {
     const { success, data } = signinSchema.safeParse(req.body);
+    console.log(data.email)
     if (!success) {
       return res
         .status(422)
         .json({ success: false, message: "Invalid input data" });
     }
-
     const user = await teacherData.findOne({
       email: data.email,
-      
     });
     if(!user){
       throw new Error("user doesn't exist")
