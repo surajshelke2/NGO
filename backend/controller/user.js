@@ -126,20 +126,29 @@ const login = asyncHandler(async (req, res) => {
     const { success, data } = signinSchema.safeParse(req.body);
     console.log(data)
     if (!success) {
-      throw new Error("Invalid input data");
+      res.status(404).json({
+        success:false,
+        message:"Invalid Input Data!"
+      })
+      return;
     }
 
     const user = await StudentData.findOne({ email: data.email });
     console.log(user)
     
     if(!user){
-      throw new Error("User doesn't exist");
+      res.status(404).json({
+        success:false,
+        message:"User doesn't exist!"
+      })
+      return;
     }
 
     if (!user.isVerify) {
       return res
         .status(401)
-        .json({ success: false, message: "Please verify your email before logging in" });
+        .json({ success: false, message: "Please verify your email before logging In!" });
+        return;
     }
 
     const passwordMatch = await bcrypt.compare(data.password, user.password);
@@ -149,17 +158,24 @@ const login = asyncHandler(async (req, res) => {
 
       res.status(200).json({
         success: true,
-        message: "Logged in successfully",
+        message: "Logged in successfull!",
         token:token,
       });
-
+      return;
     
     }  else {
-      throw new Error("Incorrect email or password");
+      res.status(404).json({
+        status:false,
+      message:"Invalid Username and Password!"
+      })
+      return;
     }
   } catch (error) {
-    console.error("Error in login:", error.message);
-    res.status(400).send(error.message);
+    res.status(400).send({
+      success:false,
+      message:"Something went wrong!"
+    });
+    return;
   }
 });
 
