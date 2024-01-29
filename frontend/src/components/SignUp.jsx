@@ -12,7 +12,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [role,setRole] = useState("");
-  const [emailDialogBox,setEmailDialogBox] = useState("0%");
+  const [emailDialogBox,setEmailDialogBox] = useState("-200%");
   const location = useLocation();
   // const upload = multer()
   useEffect(()=>{
