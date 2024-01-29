@@ -145,7 +145,7 @@ const login = asyncHandler(async (req, res) => {
     }
 
     if (!user.isVerify) {
-      return res
+      res
         .status(401)
         .json({ success: false, message: "Please verify your email before logging In!" });
         return;

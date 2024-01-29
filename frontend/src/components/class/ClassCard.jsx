@@ -1,4 +1,13 @@
-export default function ClassCard({classItem}){
+import { useNavigate } from "react-router-dom";
+
+export default function ClassCard({classItem , role}){
+    const navigate = useNavigate()
+    const subject = "marathi"
+    function HandleExploreClick(e,role){
+        e.preventDefault();
+        console.log(role);
+        navigate(`/user/class/${subject}?role=${role}`);
+    }
     return (
     <div>
     <div key={classItem.className} className="bg-slate-500 rounded-lg flex-col content-between overflow-hidden">
@@ -9,7 +18,9 @@ export default function ClassCard({classItem}){
     </div>
     <div className="font-black text-7xl max-xl:text-5xl">{classItem.className}{classItem.classCode}</div>
     </div>
-    <button className="bg-orange-400 py-1 rounded-md w-full text-white">Explore</button>
+    <button className="bg-orange-400 py-1 rounded-md w-full text-white" onClickCapture={(e)=>{
+        HandleExploreClick(e,role);
+    }}>Explore</button>
     </div>
     </div>)
 }

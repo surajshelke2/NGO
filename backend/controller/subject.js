@@ -33,24 +33,27 @@ const getAllSubjects = async (req, res) => {
 
 const createNewSubject = asyncHandler(async (req, res) => {
   try {
-    const { success, data } = subjectSchema.safeParse(req.body);
+    // const { success, data } = subjectSchema.safeParse(req.body);
+    const data = req.body;
+    // if (!success) {
+    //   throw new Error("Enter the Valid Data");
+    // }
 
-    if (!success) {
-      throw new Error("Enter the Valid Data");
-    }
+    // if (!data.subjectName) {
+    //   throw new Error("The subjectName field is empty");
+    // }
+    console.log(data);
 
-    if (!data.subjectName) {
-      throw new Error("The subjectName field is empty");
-    }
-
-    const classID = req.body.classID;
+    const classData = await Class.findOne({className:data.className,classCode:data.classId});
+    console.log(classData);
+    const classID = classData._id;
     if (!classID) {
       throw new Error("Class ID is required");
     }
 
     // Create the subject and associate it with the specified class
     const subject = await Subject.create({
-      subjectName: data.subjectName,
+      subjectName: data.subject,
       classID: classID, 
     });
 

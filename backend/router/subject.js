@@ -5,7 +5,7 @@ const router = express.Router();
 
 
 router.get('/',authMiddleware,getAllSubjects);
-router.post('/add',authMiddleware,createNewSubject);
+router.post('/add',createNewSubject);
 router.put('/update',authMiddleware,updateSubjectName);
 router.delete('/delete',authMiddleware,deleteSubject);
 
