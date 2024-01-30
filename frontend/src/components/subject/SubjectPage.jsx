@@ -1,11 +1,22 @@
 import { useEffect, useState } from "react";
 import AddSubject from "./AddSubject";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 export default function SubjectPage(){
     const [topPosition,setTopPosition] = useState("-200%");
+    const [subjectsData,setSubjectsData] = useState([]);
+    const {classid} = useParams();
     useEffect(()=>{
-        
-    },[topPosition])
+        console.log(subjectsData)
+        ;(async()=>{
+            axios.get(`http://localhost:4000/api/v1/class/subject/${classid}`).then((res)=>{
+                setSubjectsData(res.data.data)
+            }).catch((err)=>{
+                alert(err.response.data.message);
+            })
+        })();
+    },[topPosition,subjectsData.length])
     return(
         <>
         <div className="flex justify-between p-8 bg-slate-800 bg-opacity-5">
@@ -15,8 +26,10 @@ export default function SubjectPage(){
                 <div>
                     <button className="bg-orange-500 w-full p-2" onClick={()=>setTopPosition("0%")}>Add subject</button>
                 </div>
-                <div>
-                    <button className="bg-orange-500 w-full p-2">subjects</button>
+                <div className="flex flex-col gap-3">
+                    {subjectsData.map((subject,index)=>
+                        <button className="bg-orange-500 w-full p-2" key={index} id={subject._id}>{subject.subjectName}</button>
+                    )}
                 </div>
                 </div>
             </div>

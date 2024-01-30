@@ -1,27 +1,29 @@
 import { useEffect, useState } from "react";
 import { classList } from "../../constants.js";
 import axios from 'axios'
+import { useParams } from "react-router-dom";
 
 export default function AddSubject({topPosition,setTopPosition}) {
-   const [className, setClassName] = useState(null);
-   const [classId, setClassId]= useState("");
    const [subject, setSubject] = useState("");
+   const {classid} = useParams()
+   useEffect(()=>{
+
+   },[topPosition,subject.length])
   function handleAddSubjectSubmit(e){
     e.preventDefault();
     if(!subject)
-    alert("Enter subject name!")
-    else if(!classId)
-    alert("select class id");
-    else if(!className)
-    alert("select class");
-    console.log({className,classId,subject});
+    {
+      alert("Enter subject name!")
+      return;
+    }
     ;(async()=>{
-      await axios.post("http://localhost:4000/api/v1/class/subject/add",{className,classId,subject}).then((res)=>{
-        console.log("response : ",res)
+      await axios.post(`http://localhost:4000/api/v1/class/subject/add/${classid}`,{subject}).then((res)=>{
+        console.log("response : ",res.data.message)
       }).catch((err)=>{
-        console.log("error : ",err);
+        console.log("error : ",err.response.data.message);
       })
-    })()
+    })();
+    setTopPosition("-200%")
   }
   return (
     <div className="absolute w-full z-50 bg-black text-gray-500 h-screen bg-opacity-70" style={{top:topPosition}}>
@@ -40,30 +42,6 @@ export default function AddSubject({topPosition,setTopPosition}) {
     focus:outline-none focus:border-orange-400  focus:ring-1 focus:orange-500"
             onChange={(e) => setSubject(e.target.value)}
           />
-          <div className="flex">
-            <select
-              required
-              className="mt-1 block w-full px-3 py-2 bg-transparent border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-    focus:outline-none focus:border-orange-400  focus:ring-1 focus:orange-500"
-              onChange={(e) => setClassName(e.target.value)}
-            >
-              <option value={""}>Select Class</option>
-              {classList.classes.map((classNum,index) => (
-                <option key={index} value={classNum}>Class {classNum}</option>
-              ))}
-            </select>
-            <select
-              required
-              className="mt-1 block w-full px-3 py-2 bg-transparent border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-    focus:outline-none focus:border-orange-400  focus:ring-1 focus:orange-500"
-              onChange={(e) => setClassId(e.target.value)}
-            >
-              <option value={""}>Select Class Id</option>
-              {classList.classIds.map((classId,index) => (
-                <option key={index} value={classId}>{classId}</option>
-              ))}
-            </select>
-          </div>
           <button
             type="submit"
             onClick={(e)=>handleAddSubjectSubmit(e)}

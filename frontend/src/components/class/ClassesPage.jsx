@@ -4,7 +4,7 @@ import ClassRegistereImage from '/images/classRegisteredImage.png'
 import { classList } from "../../constants.js";
 import ClassCard from "./ClassCard.jsx";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 export default function ClassesPage() {
   const [className, setClassName] = useState("");
@@ -30,7 +30,7 @@ export default function ClassesPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await axios
-      .post("http://localhost:4000/api/v1/class/add", {
+      .post(`http://localhost:4000/api/v1/class/add`, {
         className,
         classCode,
         classTeacher,
