@@ -25,7 +25,6 @@ const subjectSchema = mongoose.Schema({
   subjectName: {
     type: String,
     required: [true, "Subject name is required"],
-    unique:true
   },
   units: [{ type: mongoose.Schema.Types.ObjectId, ref: "Unit" }],
 });

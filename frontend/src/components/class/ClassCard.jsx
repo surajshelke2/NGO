@@ -2,11 +2,10 @@ import { useNavigate } from "react-router-dom";
 
 export default function ClassCard({classItem , role}){
     const navigate = useNavigate()
-    const subject = "marathi"
     function HandleExploreClick(e,role){
         e.preventDefault();
         console.log(role);
-        navigate(`/user/class/${subject}?role=${role}`);
+        navigate(`/user/class/${e.target.id}?role=${role}`);
     }
     return (
     <div>
@@ -20,7 +19,7 @@ export default function ClassCard({classItem , role}){
     </div>
     <button className="bg-orange-400 py-1 rounded-md w-full text-white" onClickCapture={(e)=>{
         HandleExploreClick(e,role);
-    }}>Explore</button>
+    }} id={classItem._id}>Explore</button>
     </div>
     </div>)
 }

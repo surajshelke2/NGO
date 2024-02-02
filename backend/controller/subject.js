@@ -10,45 +10,47 @@ const subjectSchema = z.object({
 
 const getAllSubjects = async (req, res) => {
   try {
-    const subjects = await Subject.find({}).populate("units");
+    const response = await Class.findOne({_id:req.params.classid}).populate("subjects");
+    const subjects = response.subjects;
+    console.log(subjects)
     if (!subjects || subjects === 0) {
       res.status(200).json({
         success: true,
-        subjects,
+        data : [],
         message:"Empty Subject"
       });
+      return;
     }
-
     res.status(200).json({
       success: true,
       data: subjects,
     });
+    return;
   } catch (error) {
     res.status(400).json({
       success: false,
       error: error.message,
     });
+    return;
   }
 };
 
 const createNewSubject = asyncHandler(async (req, res) => {
   try {
     // const { success, data } = subjectSchema.safeParse(req.body);
-    const data = req.body;
-    // if (!success) {
-    //   throw new Error("Enter the Valid Data");
-    // }
+    const data = req.body;    
+    // console.log(data);
 
-    // if (!data.subjectName) {
-    //   throw new Error("The subjectName field is empty");
-    // }
-    console.log(data);
-
-    const classData = await Class.findOne({className:data.className,classCode:data.classId});
-    console.log(classData);
-    const classID = classData._id;
+    // const classData = await Class.findOne({className:data.className,classCode:data.classId});
+    // console.log(classData);
+    // const classID = classData._id;
+    const classID = req.params.classid;
     if (!classID) {
-      throw new Error("Class ID is required");
+      res.status(401).json({
+        success:false,
+        message:"Class doesn't exists!"
+      })
+      return;
     }
 
     // Create the subject and associate it with the specified class
@@ -66,18 +68,20 @@ const createNewSubject = asyncHandler(async (req, res) => {
       message: "Subject has been created",
       data: subject,
     });
+    return;
   } catch (error) {
     if (error.code === 11000 && error.keyPattern && error.keyPattern.subjectName) {
       // Duplicate subjectName error
       return res.status(400).json({
         success: false,
-        error: "Duplicate subjectName. Please choose a different name.",
+        message: "Duplicate subjectName. Please choose a different name.",
       });
     }
 
     console.error(error.message);
     return res.status(500).json({
-      error: "Internal server error",
+      success:false,
+      message : "Internal Server Error!"
     });
   }
 });

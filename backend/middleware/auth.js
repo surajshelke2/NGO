@@ -1,27 +1,27 @@
-const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
-
+const { StudentData,teacherData } =  require('../model/user.js');
+const jwt = require('jsonwebtoken')
 const authMiddleware = asyncHandler( async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  console.log(authHeader)
-  if (!authHeader || !authHeader.startsWith('Bearer')) {
-    return res.status(401).json({ msg: 'Missing authentication header' });
-  }
-
-  const token = authHeader.split(' ')[1];
-
-  try {
-    const decoded = await jwt.verify(token, process.env.JWT_SECRET);
-
-    // Now you can access decoded.userId
-    req.userId = decoded.userId;
-    next();
-  } catch (error) {
-    return res.status(403).json({
-      success: false,
-      message: error.message // Use error.message instead of error
-    });
-  }
+  jwt.verify(req.headers.authorization.split(' ')[1],process.env.JWT_SECRET,(err,decoded)=>{
+    if(!err)
+    {
+      const userId = decoded.userId;
+      ;(async ()=>{
+      try{
+      const existing_teacher = await teacherData.findOne({_id:decoded.userId})
+      next()
+      }
+      catch(err){
+        res.status(401).send({
+          success:false,
+          message:"seems you are not logged in!"
+        })
+       next()
+      }
+      })();
+    }
+    else
+    console.log(err)
+  })
 });
-
 module.exports = { authMiddleware };
