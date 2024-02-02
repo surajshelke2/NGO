@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import studetnLoginImage from '/images/studentLogin.png'
+import CustomSpinner from "./CustomSpinner.jsx";
 import emailIcon from '/images/emailIcon.png'
 
 
@@ -12,6 +13,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [role,setRole] = useState("");
+  const [loading,setLoading] = useState(false);
   const [emailDialogBox,setEmailDialogBox] = useState("-200%");
   const location = useLocation();
   // const upload = multer()
@@ -23,8 +25,7 @@ export default function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    
+    setLoading(true);
       if (role === 'student') {
         await registerStudent();
       } else if (role === 'teacher') {
@@ -42,11 +43,12 @@ export default function SignUp() {
         email,
         password
       });
+      setLoading(false);
       console.log("User registered successfully");
       console.log(response.data);
-      alert(response.data);
     } catch (error) {
-      if (error.response) {
+      setLoading(false);
+      if (error) {
         console.error("Error occurred during registration:", error.response.data);
         alert("User registration failed. Error: " + error.response.data);
       } else {
@@ -57,25 +59,26 @@ export default function SignUp() {
   };
   
   const registerTeacher = async () => {
-    try{
-    const {response} = await axios.post("http://localhost:4000/api/v1/user/teacher/signup", {
+    await axios.post("http://localhost:4000/api/v1/user/teacher/signup", {
       firstName,
       middleName,
       lastName,
       email,
       password,
       degree: "phd"
-    });
-    console.log("User registered successfully" ,response.data);
+    })
+    .then(()=>{
+    setLoading(false);
+    console.log("User registered successfully");
     setEmailDialogBox(true);
-
-  }catch (error) {
-      
-    alert("User Registration Failed. Error: " + error.response.data);
+    }).catch((err)=>{
+      setLoading(false);
+    alert("User Registration Failed. Error: ");
+    })
   }
-  };
-
   return (
+    <>
+    {loading ? <CustomSpinner/> : <>
     <div className="flex w-screen gap-18 justify-center max-sm:flex-col relative">
       <div className="flex gap-1 w-fit align-middle flex-col items-center bold my-8 text-3xl font-medium max-sm:text-2xl max-sm:m-auto">
         <img src={studetnLoginImage} alt="" width="100%"/>
@@ -88,7 +91,7 @@ export default function SignUp() {
           value={firstName}
           autoFocus
           className="mt-1 block w-full px-3 py-2 bg-transparent border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-    focus:outline-none focus:border-orange-500  focus:ring-1 focus:orange-500"
+    focus:outline-none focus:border-slate-500  focus:ring-1 focus:slate-500"
           onChange={(e) => setFirstname(e.target.value)}
         />
         <input
@@ -96,7 +99,7 @@ export default function SignUp() {
           placeholder="midlename"
           value={middleName}
           className="mt-1 block w-full px-3 py-2 bg-transparent border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-    focus:outline-none focus:border-orange-500  focus:ring-1 focus:orange-500"
+    focus:outline-none focus:border-slate-500  focus:ring-1 focus:slate-500"
           onChange={(e) => setMidlename(e.target.value)}
         />
         <input
@@ -104,7 +107,7 @@ export default function SignUp() {
           placeholder="lastname"
           value={lastName}
           className="mt-1 block w-full px-3 py-2 bg-transparent border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-    focus:outline-none focus:border-orange-500  focus:ring-1 focus:orange-500"
+    focus:outline-none focus:border-slate-500  focus:ring-1 focus:slate-500"
           onChange={(e) => setLastname(e.target.value)}
         />
         <input
@@ -112,7 +115,7 @@ export default function SignUp() {
           placeholder="Email"
           value={email}
           className="mt-1 block w-full px-3 py-2 bg-transparent border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-    focus:outline-none focus:border-orange-500  focus:ring-1 focus:orange-500"
+    focus:outline-none focus:border-slate-500  focus:ring-1 focus:slate-500"
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
@@ -120,13 +123,13 @@ export default function SignUp() {
           value={password}
           placeholder="password"
           className="mt-1 block w-full px-3 py-2 bg-transparent border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-    focus:outline-none focus:border-orange-500  focus:ring-1 focus:orange-500"
+    focus:outline-none focus:border-slate-500  focus:ring-1 focus:slate-500"
           onChange={(e) => setPassword(e.target.value)}
         />
           <button
             type="submit"
             className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-          focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 bg-orange-500 text-white hover:bg-orange-600">
+          focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 bg-slate-500 text-white hover:bg-slate-600">
             Register
           </button>
       </form>
@@ -140,5 +143,7 @@ export default function SignUp() {
       </div>
     </div>
     </div>
+    </>}
+    </>
   );
 }

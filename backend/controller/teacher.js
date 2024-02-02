@@ -66,17 +66,15 @@ const register = asyncHandler(async (req, res) => {
 
     const userId = user._id;
     const token = jwt.sign({ userId }, process.env.JWT_SECRET);
-
     sendVerifyMail(data.firstName, data.email, userId);
-
-    res.status(201).json({
+    return res.status(200).json({
       success: true,
       message: "User created successfully. Check your email for verification.",
       token: token,
     });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 });
 
@@ -146,15 +144,17 @@ const verifyMail = asyncHandler(async (req, res) => {
 const login = asyncHandler(async (req, res) => {
   try {
     const { success, data } = signinSchema.safeParse(req.body);
-    console.log(data.email)
+  
     if (!success) {
       return res
         .status(422)
         .json({ success: false, message: "Invalid input data" });
     }
     const user = await teacherData.findOne({
-      email: data.email,
+      email: data.email
     });
+    console.log("user : ",user)
+ 
     if(!user){
       throw new Error("user doesn't exist")
     }
