@@ -39,9 +39,9 @@ destination:(req,file,cb)=>{
     }
 }})
 
-console.log(storage)
+
 const upload = multer({ storage: storage });
-console.log(upload)
+
 app.post('/upload', upload.single('file'), function (req, res) {
   if (!req.file) {
    

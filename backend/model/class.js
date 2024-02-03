@@ -18,7 +18,7 @@ const classSchema = mongoose.Schema(
     },
     folderId: {
       type: String,
-      required: true,
+     
     },
     subjects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Subject" }],
   },
@@ -70,8 +70,11 @@ const resultSchema = new mongoose.Schema(
 
 classSchema.pre("save", async function (next) {
   try {
-    await createClassFolder(this.className, this.classCode);
+    const folderId =await createClassFolder(this.className, this.classCode);
 
+    console.log(folderId)
+    this.folderId= folderId;
+    
    
     next();
   } catch (error) {
