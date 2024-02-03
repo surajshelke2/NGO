@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
+const { createClassFolder } = require("../controller/classService");
+
 
 const classSchema = mongoose.Schema(
   {
     className: {
-      type: Number,
-      required: [true, "Please provide a Class Name"],
+      type: String,
+      required:true
     },
     classCode : {
       type: String,
@@ -13,6 +15,10 @@ const classSchema = mongoose.Schema(
     classTeacher : {
       type : String,
       required : true
+    },
+    folderId: {
+      type: String,
+      required: true,
     },
     subjects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Subject" }],
   },
@@ -60,6 +66,20 @@ const resultSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+
+
+classSchema.pre("save", async function (next) {
+  try {
+    await createClassFolder(this.className, this.classCode);
+    next();
+  } catch (error) {
+    console.error("Error creating class folder:", error);
+    next(error);
+  }
+});
+
+
 
 
 const Result = mongoose.model("Result", resultSchema);

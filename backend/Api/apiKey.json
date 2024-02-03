@@ -1,0 +1,14 @@
+{
+    "type": "service_account",
+    "project_id": "ngoproject-412813",
+    "private_key_id": "275eee9322bdf27b1cc7bdaa9f8aabe89a69a870",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQD+JVYzWyBn/Kd9\nC/oIP65jrtnLMiOCD52zCJ+VqRRGofOR9RXnyeI0f6M1NO+Qza9KlBEFH6dfZJ+A\nPc5SzQunAyWQndJOlqeX1Jg7qAUE8VbK6f1b8oYybTWro4AntxX0/n99JgwbIg/g\n1rNvauKnu1VXgD5H+rImZVLdlsKKH1H2jA8aDXGxDtPhmsvdtuw+9FoqNbAVcACo\nplaXzJKCtEjAawArrkoPH+2BLRsrA4yW76jYGC5ScI+S9g1c81RNZWsgPf8PJvKb\nlLz10Kz3ykwvD321fXv46L3zVPksowT+RshxfucCTIhzhQnbnX3hZ/2w7dT4v7lD\nkiyFRrVbAgMBAAECggEAI+CvIxqIYCBgSqcQBJhs14CzGVw6JrMVVFVxe0YTvobq\nujOrBH5REzqOQUV4U8Jdrn2+9gYKcaKPC80Yh+2PaWPof9pvz+K1Gm+LkCcU56Y5\nq5/4bEG4D9KwAsuBnNmxXVU3jTomTQb0I+MGEMK6PZXqIytPtNyfcraCH2sYNTmV\nAChgUJlonfv7L6Ce5VlAESm4L1LlD2PTBHos708N82IYF5pfbD54Ij5jNkPmRz/D\nNSWdNQDwYR34n5pN/6Ps25NnON+cGpJK7V3ayXH1Qqaeh+EwVBFenqfA2Dkh4feh\n5mwiKPdATWIJoSj3MnHQTkJJSEAu5f29bF99GY4TRQKBgQD/kJx6uyQXTIpeuAWY\nzCNxiNao5hlLvysWxFY5UYirAiyE4DFO43EuK9KUt7jyWIodM3JevoqfhqETEl0D\n8B1Dh5AFu0XAVr4uFcemZtfZs+XaC0CPCDlsUr94FRqqPBJcBmMreln+Q0SXANjt\n4L0qI2qr/ZeUVPCM4Yj/j70LtwKBgQD+lBtjCRTmZcYQR00kG/GaEZhNo2oANYne\nzTUlx2SitNuoQD8bHhAnInHmft7KOj21z9BdMGGmACqoVs7+2PDtwGOgXtFXYiCS\nUeXboGNgokFzFwTEpd4qQgRf7e+T1MPtZlj7s2aZmeSRBDcCJdHzPFj3XsORlY4n\nyC7LQ4HrfQKBgEutuBjD+CEKImOAHPAta0WAnwhu8wiyOIFKbLoWgeEaCLLkbNWO\nloJ0qawuZ48kVunkxTZ3ODebN3GdW3wCC7hmmWiJF1OonDKrcm69P6gRFLyn3ls8\ntTx1mItnvHiyx0EHBzDlz2Zy5wnMT3DJv1qOGFWMB+n96Sne06HSH8orAoGAM6vw\nGxveyBzkJK20NJ4PXcwwc6G1hDFZuIVCQlbEUFoRM4dGx8REVw0gvT4HDljf6aUy\nj5egWkcyYVStUwDJdhhUoFpedzQNlGVXGErnoNeOHUQQzbE09LLNnIL427KVyfu6\nF+yD6K1ZvS1z1NXEVXBsRllPrJ8EaYKyLMOY/SkCgYEAg0tg72385Nn5piMjKw21\n/YB+wPT/1VnAL8Ep9ofTfe0iME2lkghw+Z9mpdntZhuTLS1KjcIk9fcpu1nMDyi4\npbeSm4QiLQQ71sTQyh1Kwh87sCAAKwqviOTDypvmTPKeT/9W353v5hMy+yWeFoKP\n3QoOB6WXGdTnPBvKk57Vi9M=\n-----END PRIVATE KEY-----\n",
+    "client_email": "ngo-service@ngoproject-412813.iam.gserviceaccount.com",
+    "client_id": "105294510667616794309",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/ngo-service%40ngoproject-412813.iam.gserviceaccount.com",
+    "universe_domain": "googleapis.com"
+  }
+  

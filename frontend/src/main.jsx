@@ -9,6 +9,8 @@ import SignUp from './components/SignUp.jsx'
 import ClassesPage from './components/class/ClassesPage.jsx'
 import AppProvider from './components/context/AppProvider.jsx'
 import SubjectPage from './components/subject/SubjectPage.jsx'
+import FileUpload from './components/FileUpload/UploadFile.jsx'
+import FileViewer from './components/FileUpload/ViewFile.jsx'
 
 
 function AppRoutes() {
@@ -20,6 +22,11 @@ function AppRoutes() {
         <Route path="user/register" element={<SignUp/>} />
         <Route path="user/class" element={<AppProvider Component = {ClassesPage} />}/>
         <Route path='/user/class/:classid' element={<AppProvider Component={SubjectPage}/>}/>
+
+        <Route path='/user/class/:classId/file/upload' element={<AppProvider Component={FileUpload}/>}/>
+        <Route path='/user/class/:classId/file/View' element={<AppProvider Component={FileViewer}/>}/>
+
+        
       </Route>
     </Routes>
   );
