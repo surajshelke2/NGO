@@ -8,9 +8,10 @@ async function createClassFolder(className, classCode) {
     const folderId = await createFolder(folderName, process.env.FOLDER_ID);
     if (!folderId) {
       console.log("Class folder is not created");
-      return folderId;
+      
     } else {
       console.log("Class folder is created successfully");
+      return folderId;
     }
   } catch (error) {
     throw new Error("Error creating class folder");
