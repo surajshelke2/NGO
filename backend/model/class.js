@@ -42,9 +42,8 @@ const unitSchema = mongoose.Schema({
 });
 
 const contentSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: { type: String },
-  fileURL: { type: String },
+  contentTitle: { type: String, required: true },
+  files:[{type:mongoose.Schema.Types.ObjectId,ref:"File"}]
 
 });
 
@@ -72,12 +71,16 @@ const resultSchema = new mongoose.Schema(
 classSchema.pre("save", async function (next) {
   try {
     await createClassFolder(this.className, this.classCode);
+
+   
     next();
   } catch (error) {
     console.error("Error creating class folder:", error);
     next(error);
   }
 });
+
+
 
 
 

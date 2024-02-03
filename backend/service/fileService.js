@@ -1,9 +1,6 @@
 const { google } = require('googleapis');
 const fs = require('fs');
-const apikeys = require('../Api/apiKey.json');
 const File = require('../model/fileModel');
-
-
 
 const SCOPE = ["https://www.googleapis.com/auth/drive"];
 
@@ -18,12 +15,11 @@ async function authorize() {
   return jwtClient;
 }
 
-async function uploadFile(file, folderId, next) {
+async function uploadFile(file, folderId, contentTitle, next) { // Pass contentTitle as a parameter
   try {
-    const mimeType = file.mimeType ||'application/pdf'; // Default MIME type to application/pdf if not provided
-    const auth = await authorize(); // Authorize and get the authentication credentials
-
-    const drive = google.drive({ // Initialize the drive variable here
+    const mimeType = file.mimeType || 'application/pdf';
+    const auth = await authorize();
+    const drive = google.drive({
       version: 'v3',
       auth: auth,
     });
@@ -46,13 +42,14 @@ async function uploadFile(file, folderId, next) {
 
     const fileId = response.data.id;
 
-    // Save file information to MongoDB
     const newFile = await File.create({
       originalname: file.originalname,
       mimeType: mimeType,
       fileId: fileId,
     });
 
+   
+ 
     fs.unlinkSync(file.path);
   
     return fileId;
@@ -72,7 +69,7 @@ async function createFolder(folderName, folderId, next) {
     });
   
     const folderIds = [];
-    if (folderId) { // Check if folderId is truthy (not null or undefined)
+    if (folderId) {
       folderIds.push(folderId);
     }
   
