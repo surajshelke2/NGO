@@ -1,33 +1,52 @@
 
-import React, { useState, useEffect } from 'react';
+
 import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
-function FileViewer({ fileId }) {
-  const [file, setFile] = useState(null);
+const ViewFilesInFolder = () => {
+    const [files, setFiles] = useState([]);
+    const { classId } = useParams();
 
-  useEffect(() => {
-    async function fetchFile() {
-      try {
-        const response = await axios.get(`/api/files/${fileId}`);
-        setFile(response.data);
-      } catch (error) {
-        console.error('Error fetching file:', error);
-      }
-    }
-    fetchFile();
-  }, [fileId]);
+    useEffect(() => {
+      const fetchFiles = async () => {
+          try {
+              const res = await axios.get(`http://localhost:4000/api/v1/class/subject/unit/content/file/gets/${classId}`);
+              setFiles(res.data);
+              console.log(res.data)
+          } catch (error) {
+              console.error('Error fetching files:', error);
+          }
+      };
 
-  return (
-    <div>
-      {file && (
-        <div>
-          <h2>{file.name}</h2>
-          <p>MIME Type: {file.mimeType}</p>
-          <p><a href={file.webViewLink} target="_blank" rel="noopener noreferrer">View File</a></p>
+      fetchFiles();
+  }, []);
+
+
+    return (
+        <div className="max-w-4xl mx-auto">
+            {files.length > 0 ? (
+                <div>
+                    <h2 className="text-2xl font-bold mb-4">Contents of the folder:</h2>
+                    <div className="grid grid-cols-1 gap-4">
+                        {files.map(file => (
+                            <div key={file.id} className="bg-white shadow-md rounded-md p-4">
+                                <strong className="block text-xl mb-2">{file.name}</strong>
+                                <p className="text-gray-700">File ID: {file.id}</p>
+                                <p className="text-gray-700">File Type: {file.mimeType}</p>
+                                <div className="mt-4">
+                                    <a href={`https://drive.google.com/uc?export=download&id=${file.id}`} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:scale-105 mr-2" target="_blank" rel="noopener noreferrer">Download</a>
+                                    <a href={`https://drive.google.com/file/d/${file.id}/view`} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:scale-105" target="_blank" rel="noopener noreferrer">View</a>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ) : (
+                <p>The folder is empty.</p>
+            )}
         </div>
-      )}
-    </div>
-  );
-}
+    );
+};
 
-export default FileViewer;
+export default ViewFilesInFolder;

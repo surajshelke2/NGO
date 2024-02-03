@@ -71,8 +71,6 @@ const resultSchema = new mongoose.Schema(
 classSchema.pre("save", async function (next) {
   try {
     const folderId =await createClassFolder(this.className, this.classCode);
-
-    console.log(folderId)
     this.folderId= folderId;
     
    
