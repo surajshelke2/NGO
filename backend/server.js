@@ -11,7 +11,6 @@ const connectDB = require("./databases/data");
 const bodyParser = require("body-parser");
 const app = express();
 const fileController = require('./controller/fileController');
-const multer = require("multer");
 
 // Middleware
 app.use(cors());
@@ -22,16 +21,27 @@ app.use(express.json())
 
 
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/'); 
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname); 
-  },
-});
+const multer=require('multer');
 
+var storage = multer.diskStorage({
+
+destination:(req,file,cb)=>{
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg' || file.mimetype==='image/png') {
+
+        cb(null, 'uploads/images')
+    } 
+    else if (file.mimetype === 'application/pdf') {
+        cb(null, 'uploads/pdfs')
+    } 
+    else {
+        console.log(file.mimetype)
+        cb({ error: 'Mime type not supported' })
+    }
+}})
+
+console.log(storage)
 const upload = multer({ storage: storage });
+console.log(upload)
 app.post('/upload', upload.single('file'), function (req, res) {
   if (!req.file) {
    

@@ -30,7 +30,7 @@ async function uploadFile(file, folderId, next) {
     
     const fileMetadata = {
       name: file.originalname,
-      parents: "134vEVEQdNFhVBslusoUZWtQh3-662SWV",
+      parents: [folderId],
     };
 
     const media = {
@@ -53,7 +53,6 @@ async function uploadFile(file, folderId, next) {
       fileId: fileId,
     });
 
-    // Delete the uploaded file after it's uploaded to Google Drive
     fs.unlinkSync(file.path);
   
     return fileId;
