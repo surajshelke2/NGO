@@ -6,6 +6,7 @@ const multer = require("multer");
 const fileController = require("./controller/fileController");
 const connectDB = require("./databases/data");
 const fileRouter = require("./router/fileRouter")
+const resultRouter = require("./router/resultRouter")
 require("dotenv").config();
 
 const app = express();
@@ -55,6 +56,8 @@ app.use("/api/v1/class", classRouter);
 app.use("/api/v1/class/subject", subjectRouter);
 app.use("/api/v1/class/subject/unit", unitRouter);
 app.use("/api/v1/class/subject/unit/content/file",fileRouter)
+app.use("/api/v1/class/result",resultRouter);
+
 
 app.get("/api/v1", (req, res) => {
   console.log("App is running fine!!");

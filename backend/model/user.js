@@ -55,6 +55,10 @@ const StudentSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    result: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Result'
+    },
   },
 
   {
@@ -129,6 +133,7 @@ const teacherSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  
 },{
   timestamps:true
 });

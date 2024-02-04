@@ -3,5 +3,10 @@ export const determinePassOrFail = (score) => {
   };
 
   export const calculateScore = (subjects) => {
-    return subjects.reduce((total, subject) => total + subject.marksObtained, 0);
+    const totalMarks = subjects.reduce((total, subject) => total + subject.totalMarks, 0);
+    if (totalMarks === 0) return 0; 
+    const totalObtainedMarks = subjects.reduce((total, subject) => total + subject.marksObtained, 0);
+    const averagePercentage = (totalObtainedMarks / totalMarks) * 100;
+    return averagePercentage;
   };
+  
