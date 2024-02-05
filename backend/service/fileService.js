@@ -94,4 +94,23 @@ async function createFolder(folderName, folderId, next) {
   }
 }
 
-module.exports = { uploadFile, createFolder };
+
+async  function getAllFiles(folderId){
+
+  const auth = await authorize();
+  const drive = google.drive({
+    version: 'v3',
+    auth: auth,
+  })
+
+  const response = await drive.files.list({
+    q: `'${folderId}' in parents`,
+    fields: 'files(id, name, mimeType)'
+});
+ const files = response.data.files;
+ console.log(response.data);
+ return files;
+  
+}
+
+module.exports = { uploadFile, createFolder,getAllFiles };

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import ClassNavBar from "../navbars/ClassNavBar.jsx";
 import ClassRegistereImage from "/images/classRegisteredImage.png";
 import { classList } from "../../constants.js";
 import ClassCard from "./ClassCard.jsx";

@@ -12,6 +12,10 @@ import SubjectPage from './components/subject/SubjectPage.jsx'
 import FileUpload from './components/FileUpload/UploadFile.jsx'
 import FileViewer from './components/FileUpload/ViewFile.jsx'
 
+import ResultSection from './components/result/Result.jsx'
+import FindStudents from './components/result/FindStudent.jsx'
+import studentResult from './components/studentResult/studentResult.jsx'
+
 
 function AppRoutes() {
   return (
@@ -25,6 +29,10 @@ function AppRoutes() {
 
         <Route path='/user/class/:classId/file/upload' element={<AppProvider Component={FileUpload}/>}/>
         <Route path='/user/class/:classId/file/View' element={<AppProvider Component={FileViewer}/>}/>
+        <Route path='/user/class/student/search' element={<AppProvider Component={FindStudents}/>}/>
+        <Route path='user/result/:studentId' element={<AppProvider Component={ResultSection}/>}/>
+        <Route path='user/result/view/:studentId' element={<AppProvider Component={studentResult}/>}/>
+        
 
         
       </Route>
