@@ -17,8 +17,7 @@ const classSchema = mongoose.Schema(
       required : true
     },
     folderId: {
-      type: String,
-      required:true
+      type: String
     },
     subjects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Subject" }],
   },

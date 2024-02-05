@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import classNames from "classnames";
 
 const FileUpload = () => {
   const [file, setFile] = useState(null);
