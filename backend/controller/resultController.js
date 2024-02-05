@@ -1,4 +1,3 @@
-
 const Result = require("../model/resultModel");
 const { StudentData } = require("../model/user");
 const asyncHandler = require("express-async-handler");
@@ -70,18 +69,13 @@ const SubmitResult = async (req, res) => {
       });
     }
 
-    
-
     let existingResult = await Result.findOne({ student: student._id });
-    
-    
+
     if (!existingResult) {
       existingResult = await Result.create({
         student: student._id,
         subjects: subjects,
       });
-
-      console
 
       await StudentData.findByIdAndUpdate(student._id, {
         $set: { result: existingResult._id },
@@ -104,4 +98,42 @@ const SubmitResult = async (req, res) => {
   }
 };
 
-module.exports = { searchStudents, getStudentById, SubmitResult };
+const searchResultByStudent = async (req, res) => {
+  const studentId = req.query.query;
+
+  if (!studentId) {
+    return res.status(400).json({
+      status: "fail",
+      message: "Student Id Not Found",
+    });
+  }
+
+  try {
+    const student = await StudentData.findById(studentId).populate("result");
+
+    if (!student) {
+      return res.status(404).json({
+        message: "Student Not Found",
+        success: false,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      student,
+    });
+  } catch (error) {
+    console.log("Error", error);
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = {
+  searchStudents,
+  getStudentById,
+  SubmitResult,
+  searchResultByStudent,
+};
