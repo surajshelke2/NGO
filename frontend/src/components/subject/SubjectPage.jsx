@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import AddSubject from "./AddSubject";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import AddUnit from "./AddUnit";
 import CustomSpinner from "../CustomSpinner";
@@ -16,6 +16,7 @@ export default function SubjectPage(){
     const [selectedSubjectDialog,setSelectedSubjectDialog] = useState(false);
     const [subjectId,setSubjectId] = useState("");
     const location = useLocation()
+    const navigate = useNavigate()
     useEffect(()=>{
         setLoading(true)
         setSelectedSubjectDialog(false);
@@ -56,7 +57,9 @@ export default function SubjectPage(){
         console.log(selectedSubjectDialog)
     }
 
-
+    function HandleEdit(e){
+        navigate(`/user/class/${e.target.id}/file/upload`);
+    }
 
     return(
         <>
@@ -98,7 +101,9 @@ export default function SubjectPage(){
                     </div>
                     {
                     location.search.split("=")[1] == 'teacher' ? <div className="mt-auto flex gap-2">
-                    <button className="rounded-md py-2 px-4 bg-teal-500 max-sm:text-sm">Edit</button>
+                    <button className="rounded-md py-2 px-4 bg-teal-500 max-sm:text-sm" id = {unit._id} onClick={(e)=>{
+                        HandleEdit(e);
+                    }}>Edit</button>
                     <button className="rounded-lg py-2 px-4 bg-teal-500 max-sm:text-sm" id={unit._id} onClick={(e)=>{
                         HandleDeleteUnit(e);
                     }}>Delete</button>
