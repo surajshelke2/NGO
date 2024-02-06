@@ -27,14 +27,13 @@ function AppRoutes() {
         <Route path="user/class" element={<AppProvider Component = {ClassesPage} />}/>
         <Route path='/user/class/:classid' element={<AppProvider Component={SubjectPage}/>}/>
 
-        <Route path='/user/class/:classId/file/upload' element={<AppProvider Component={FileUpload}/>}/>
+        <Route path='/user/class/:unitId/file/upload' element={<AppProvider Component={FileUpload}/>}/>
         <Route path='/user/class/:classId/file/View' element={<AppProvider Component={FileViewer}/>}/>
         <Route path='/user/class/student/search' element={<AppProvider Component={FindStudents}/>}/>
         <Route path='user/result/:studentId' element={<AppProvider Component={ResultSection}/>}/>
         <Route path='user/result/view/:studentId' element={<AppProvider Component={studentResult}/>}/>
         
 
-        
       </Route>
     </Routes>
   );
