@@ -10,7 +10,7 @@ export default function Header() {
             {/* <img src={img} className="" alt="Logo" width="150px"/> */}
             <h1 className="text-2xl font-mono max-sm:text-xl">Educative</h1>
           </div>
-          {(location.pathname.includes("login") || location.pathname.includes("register")) ? <div className="flex gap-8 max-sm:gap-3">
+          {(location.pathname.includes("login") || location.pathname.includes("register") || location.pathname === '/') ? <div className="flex gap-8 max-sm:gap-3">
             <button className="px-3 py-2 rounded-lg border-transparent text-white text-base bg-gradient-to-r from-green-400 to-blue-500 hover:from-teal-500 hover:to-teal-500 max-sm:py-2 max-sm:px-2 max-sm:text-sm">
               <Link to="/user/login/?role=student">Student</Link>
             </button> 
@@ -19,7 +19,7 @@ export default function Header() {
             </button>
           </div> : <div className="flex gap-8 max-sm:gap-3">
             <button className="px-3 py-2 rounded-lg border-transparent text-white text-base bg-gradient-to-r from-green-400 to-blue-500 hover:from-teal-500 hover:to-teal-500 max-sm:py-2 max-sm:px-2 max-sm:text-sm">
-              <Link to={`/user/result`+location.search}>result</Link>
+              <Link to={`/user/class/student/search`+location.search}>result</Link>
             </button> 
             <button className="px-3 py-2 rounded-lg border-transparent text-whitetext-base text-white bg-gradient-to-r from-green-400 to-blue-500 hover:from-teal-500 hover:to-teal-500 max-sm:py-2 max-sm:px-2 max-sm:text-sm">
               Logout

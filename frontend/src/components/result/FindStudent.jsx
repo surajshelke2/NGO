@@ -1,12 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const FindStudents = () => {
   const [student, setStudent] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [error, setError] = useState(null);
-
+  const location = useLocation()
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const FindStudents = () => {
       if (student) {
         try {
           const { data } = await axios.get(
-            `http://192.168.59.242:4000/api/v1/class/result/search?query=${student}`
+            `http://192.168.59.242:3000/api/v1/class/result/search?query=${student}`
           );
           setSearchResult(data);
           setError(null); 
@@ -70,11 +70,18 @@ const FindStudents = () => {
                     </p>
                   </div>
                   <div className="w-1/4">
-                    <button
+                    {location.search.split("=")[1] == 'teacher' && <button
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                       onClick={() => handleNavigate(student)}
                     >
                       Navigate
+                    </button>
+                    }
+                    <button
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                      onClick={() => console.log("student")}
+                    >
+                      View
                     </button>
                   </div>
                 </li>

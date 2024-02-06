@@ -24,7 +24,7 @@ export default function ClassesPage() {
         const jwtToken = localStorage.getItem('token')
         console.log("token : ",token)
         axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
-        const response = await axios.get("http://localhost:4000/api/v1/class");
+        const response = await axios.get("http://192.168.59.242:3000/api/v1/class");
 
         console.log(response.data.classes);
         setClassData(response.data.classes);
@@ -41,7 +41,7 @@ export default function ClassesPage() {
     setLoading(true);
     await axios
       .post(
-        `http://localhost:4000/api/v1/class/add`,
+        `http://192.168.59.242:3000/api/v1/class/add`,
         {
           className,
           classCode,

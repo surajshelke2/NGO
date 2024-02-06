@@ -20,7 +20,7 @@ export default function SubjectPage(){
         setLoading(true)
         setSelectedSubjectDialog(false);
         ;(async()=>{
-            await axios.get(`http://localhost:4000/api/v1/class/subject/${classid}`).then((res)=>{
+            await axios.get(`http://192.168.59.242:3000/api/v1/class/subject/${classid}`).then((res)=>{
                 setLoading(false)
                 setSubjectsData(res.data.data)
                 !subjectId && setSubjectId(res.data.data[0]._id);
@@ -31,7 +31,7 @@ export default function SubjectPage(){
             })
         })();
         subjectId && (async ()=>{
-            await axios.get(`http://localhost:4000/api/v1/class/subject/unit/${subjectId}`).then((res)=>{
+            await axios.get(`http://192.168.59.242:3000/api/v1/class/subject/unit/${subjectId}`).then((res)=>{
                     setUnitData(res.data.data)
                 }).catch((err)=>{
                     console.log(err)
@@ -41,7 +41,7 @@ export default function SubjectPage(){
 
     // deletion of unit 
     async function HandleDeleteUnit(e){
-        await axios.delete(`http://localhost:4000/api/v1/class/subject/unit/${subjectId}/delete/${e.target.id}`).then((res)=>{
+        await axios.delete(`http://192.168.59.242:3000/api/v1/class/subject/unit/${subjectId}/delete/${e.target.id}`).then((res)=>{
             console.log("response : ",res)
         }).catch((err)=>{
             console.log("error occured : ",err)

@@ -75,7 +75,7 @@ const PORT = process.env.PORT || 3000;
 (async()=>{
   await connectDB();
 })().then(()=>{
-  app.listen(PORT, () => {
+  app.listen(3000, '192.168.59.242',() => {
     console.log(`Server is running on port ${PORT}`);
   });
 }).catch((err)=>{

@@ -13,7 +13,7 @@ export default function AddUnit({positionUnitData,setPositionUnitData,subjectId}
   function handleAddUnitSubmit(e){
     e.preventDefault();
     ;(async()=>{
-      await axios.post(`http://localhost:4000/api/v1/class/subject/unit/${subjectId}/add`,{title,description}).then((res)=>{
+      await axios.post(`http://192.168.59.242:3000/api/v1/class/subject/unit/${subjectId}/add`,{title,description}).then((res)=>{
         console.log("response : ",res.data.message)
       }).catch((err)=>{
         console.log("error : ",err.response.data.message);
