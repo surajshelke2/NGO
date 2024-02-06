@@ -97,7 +97,7 @@ const sendVerifyMail = asyncHandler(async (name, email, user_id) => {
       html: `
       <h2>Hii ${name}</h2>
       <p>Click the following link to verify your email:</p>
-      <a href="http://localhost:4000/api/v1/user/teacher/verify?id=${user_id}">Verify Email</a>
+      <a href="http://192.168.59.242:4000/api/v1/user/teacher/verify?id=${user_id}">Verify Email</a>
     `,
       text: "hello",
     };

@@ -12,9 +12,9 @@ import SubjectPage from './components/subject/SubjectPage.jsx'
 import FileUpload from './components/FileUpload/UploadFile.jsx'
 import FileViewer from './components/FileUpload/ViewFile.jsx'
 
-import ResultSection from './components/result/Result.jsx'
-import FindStudents from './components/result/FindStudent.jsx'
-import studentResult from './components/studentResult/studentResult.jsx'
+// import ResultSection from './components/result/Result.jsx'
+// import FindStudents from './components/result/FindStudent.jsx'
+// import studentResult from './components/studentResult/studentResult.jsx'
 
 
 function AppRoutes() {
