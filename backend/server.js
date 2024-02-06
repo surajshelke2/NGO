@@ -8,7 +8,7 @@ const connectDB = require("./databases/data");
 const fileRouter = require("./router/fileRouter");
 const resultRouter = require("./router/resultRouter");
 require("dotenv").config();
-
+const { authMiddleware } = require("./middleware/auth");
 const app = express();
 
 // Middleware
@@ -40,6 +40,7 @@ const upload = multer({ storage });
 app.post(
   "/api/v1/class/subject/unit/content/file/upload/:unitId",
   upload.single("file"),
+  authMiddleware,
   fileController.upload
 );
 
@@ -49,6 +50,7 @@ const teacherRouter = require("./router/teacher");
 const classRouter = require("./router/class");
 const subjectRouter = require("./router/subject");
 const unitRouter = require("./router/unit");
+
 
 app.use("/api/v1/user/student", studentRouter);
 app.use("/api/v1/user/teacher", teacherRouter);
@@ -75,7 +77,7 @@ const PORT = process.env.PORT || 3000;
   await connectDB();
 })()
   .then(() => {
-    app.listen(3000, 'localhost',() => {
+    app.listen(3000, "localhost", () => {
       console.log(`Server is running on port ${PORT}`);
     });
   })

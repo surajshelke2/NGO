@@ -15,6 +15,7 @@ import FileViewer from './components/FileUpload/ViewFile.jsx'
 import ResultSection from './components/result/Result.jsx'
 import FindStudents from './components/result/FindStudent.jsx'  
 import studentResult from './components/studentResult/StudentResult.jsx'
+import NotFound from './components/PageNotFound.jsx'
 
 
 function AppRoutes() {
@@ -32,6 +33,7 @@ function AppRoutes() {
         <Route path='/user/class/student/search' element={<AppProvider Component={FindStudents}/>}/>
         <Route path='user/result/:studentId' element={<AppProvider Component={ResultSection}/>}/>
         <Route path='user/result/view/:studentId' element={<AppProvider Component={studentResult}/>}/>
+        <Route path="*" element={<NotFound/>} />
         
 
       </Route>
