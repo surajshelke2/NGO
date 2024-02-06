@@ -21,7 +21,7 @@ const FileUpload = () => {
 
     try {
       const response = await axios.post(
-        `http://192.168.59.242:3000/api/v1/class/subject/unit/content/file/upload/${classId}`,
+        `http://localhost:3000/api/v1/class/subject/unit/content/file/upload/${classId}`,
         formData,
         {
           headers: {

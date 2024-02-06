@@ -11,7 +11,7 @@ const ViewFilesInFolder = () => {
     useEffect(() => {
       const fetchFiles = async () => {
           try {
-              const res = await axios.get(`http://192.168.59.242:3000/api/v1/class/subject/unit/content/file/gets/${classId}`);
+              const res = await axios.get(`http://localhost:3000/api/v1/class/subject/unit/content/file/gets/${classId}`);
               setFiles(res.data);
               console.log(res.data)
           } catch (error) {

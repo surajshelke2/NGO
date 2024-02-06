@@ -5,8 +5,8 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const fileController = require("./controller/fileController");
 const connectDB = require("./databases/data");
-const fileRouter = require("./router/fileRouter")
-const resultRouter = require("./router/resultRouter")
+const fileRouter = require("./router/fileRouter");
+const resultRouter = require("./router/resultRouter");
 require("dotenv").config();
 
 const app = express();
@@ -55,9 +55,8 @@ app.use("/api/v1/user/teacher", teacherRouter);
 app.use("/api/v1/class", classRouter);
 app.use("/api/v1/class/subject", subjectRouter);
 app.use("/api/v1/class/subject/unit", unitRouter);
-app.use("/api/v1/class/subject/unit/content/file",fileRouter)
-app.use("/api/v1/class/result",resultRouter);
-
+app.use("/api/v1/class/subject/unit/content/file", fileRouter);
+app.use("/api/v1/class/result", resultRouter);
 
 app.get("/api/v1", (req, res) => {
   console.log("App is running fine!!");
@@ -72,17 +71,19 @@ app.use((err, req, res, next) => {
 
 // Start the server
 const PORT = process.env.PORT || 3000;
-(async()=>{
+(async () => {
   await connectDB();
-})().then(()=>{
-  app.listen(3000, '192.168.59.242',() => {
-    console.log(`Server is running on port ${PORT}`);
+})()
+  .then(() => {
+    app.listen(3000, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log("server error");
   });
-}).catch((err)=>{
-  console.log("server error")
-})
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Something went wrong!');
+  res.status(500).send("Something went wrong!");
 });

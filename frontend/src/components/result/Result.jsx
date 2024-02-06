@@ -18,7 +18,7 @@ const ResultSection = () => {
     const fetchStudent = async () => {
       try {
         const { data } = await axios.get(
-          `http://192.168.59.242:3000/api/v1/class/result/get?query=${studentId}`
+          `http://localhost:3000/api/v1/class/result/get?query=${studentId}`
         );
         setStudent(data.student);
       } catch (error) {
@@ -79,7 +79,7 @@ const ResultSection = () => {
   const handleSubmitResult = async () => {
     try {
       const response = await axios.post(
-        "http://192.168.59.242:3000/api/v1/class/result/submit",
+        "http://localhost:3000/api/v1/class/result/submit",
         { student, subjects }
       );
       console.log(response.data);

@@ -14,7 +14,7 @@ const FindStudents = () => {
       if (student) {
         try {
           const { data } = await axios.get(
-            `http://192.168.59.242:3000/api/v1/class/result/search?query=${student}`
+            `http://localhost:3000/api/v1/class/result/search?query=${student}`
           );
           setSearchResult(data);
           setError(null); 

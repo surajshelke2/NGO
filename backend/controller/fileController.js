@@ -30,10 +30,10 @@ async function upload(req, res) {
 async function  getAllFilesInAFolder(req,res){
   try {
     
-    const folder = await Class.findById(req.params.classId);
+    const folder = await Class.findById(req.params.unitId);
     if (!folder) {
      
-      return res.status(404).json({ error: 'Class not found' });
+      return res.status(404).json({ error: 'Unit not found' });
     }
      console.log("FolderId :",folder.folderId)
 

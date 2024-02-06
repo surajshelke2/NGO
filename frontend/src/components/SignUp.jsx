@@ -33,7 +33,7 @@ export default function SignUp() {
   const registerStudent = async () => {
     try {
       const { response } = await axios.post(
-        "http://192.168.59.242:3000/api/v1/user/student/signup",
+        "http://localhost:3000/api/v1/user/student/signup",
         {
           firstName,
           middleName,
@@ -63,7 +63,7 @@ export default function SignUp() {
 
   const registerTeacher = async () => {
     await axios
-      .post("http://192.168.59.242:3000/api/v1/user/teacher/signup", {
+      .post("http://localhost:3000/api/v1/user/teacher/signup", {
         firstName,
         middleName,
         lastName,

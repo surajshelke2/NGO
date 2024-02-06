@@ -1,6 +1,7 @@
 const { Subject, Class, Unit } = require("../model/class");
 const asyncHandler = require("express-async-handler");
 const z = require("zod");
+const { createOtherFolder } = require("./classService");
 
 const subjectSchema = z.object({
   title: z.string().min(1),
@@ -51,10 +52,23 @@ const createNewUnit = asyncHandler(async (req, res) => {
       throw new Error("Subject ID is required");
     }
 
+    const exists = await Subject.findById(subjectId);
+    console.log("Class Folder Id :", exists);
+    const folderId = await createOtherFolder(data.title, "", exists.folderId);
+
+    if (!folderId) {
+      return res.status(400).json({
+        message: "Not able to find the parent FolderId",
+      });
+    }
+
+
+
     // Create the subject and associate it with the specified class
     const unit = await Unit.create({
       title: data.title,
       description: data.description,
+      folderId: folderId,
     });
 
     const subject = await Subject.findOne({ _id: subjectId });

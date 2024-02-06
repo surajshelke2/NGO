@@ -24,7 +24,7 @@ export default function Login() {
     setLoading(true);
     if (role === "student") {
       await axios
-        .post("http://192.168.59.242:3000/api/v1/user/student/signin", {
+        .post("http://localhost:3000/api/v1/user/student/signin", {
           email,
           password,
         })
@@ -41,7 +41,7 @@ export default function Login() {
         });
     } else if (role === "teacher") {
       await axios
-        .post("http://192.168.59.242:3000/api/v1/user/teacher/signin", {
+        .post("http://localhost:3000/api/v1/user/teacher/signin", {
           email,
           password,
         })

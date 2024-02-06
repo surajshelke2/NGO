@@ -1,11 +1,11 @@
 const asynchandler = require("express-async-handler");
 const { Class } = require("../model/class");
-
+const { createClassFolder } = require("./classService");
 
 const getAllClasses = asynchandler(async (req, res) => {
-    // console.log(req);
+  // console.log(req);
   const classes = await Class.find({}).populate("subjects");
- 
+
   if (!classes || classes.length == 0)
     return res.status(200).json({ message: "classes Are not allocated" });
   else {
@@ -19,7 +19,7 @@ const getAllClasses = asynchandler(async (req, res) => {
 const createNewClass = asynchandler(async (req, res) => {
   try {
     const { className, classCode, classTeacher } = req.body;
-    console.log(req.body)
+    console.log(req.body);
     if (!className || !classCode || !classTeacher) {
       throw new Error("Incomplete data provided for class creation.");
     }
@@ -30,6 +30,14 @@ const createNewClass = asynchandler(async (req, res) => {
     }
 
     const newClass = new Class({ className, classCode, classTeacher });
+    await newClass.save();
+
+    const folderId = await createClassFolder(
+      className,
+      classCode,
+      process.env.FOLDER_ID
+    );
+    newClass.folderId = folderId;
     await newClass.save();
 
     return res.status(200).json({
@@ -78,30 +86,28 @@ const renameClassName = asynchandler(async (req, res) => {
   }
 });
 
-
 const deleteClass = asynchandler(async (req, res) => {
   try {
     const classId = req.params.id;
 
-    
     // Assuming Class.deleteOne() triggers pre-delete hooks defined in the schema
 
-    const exitsClass = await Class.findOne({_id:"65b38dba38d3bed6c62bebaf"})
-    console.log(classId)
-    if(!exitsClass){
-
-      throw new Error("Class Not Found")
-
+    const exitsClass = await Class.findOne({ _id: "65b38dba38d3bed6c62bebaf" });
+    console.log(classId);
+    if (!exitsClass) {
+      throw new Error("Class Not Found");
     }
 
- 
     await Class.deleteOne({ _id: classId });
-    console.log("Data is Deleted")
-    res.status(204).json({
-      status:true,
-      
-      message:"class is Deleted"
-    }).end();
+    console.log("Data is Deleted");
+    res
+      .status(204)
+      .json({
+        status: true,
+
+        message: "class is Deleted",
+      })
+      .end();
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -17,7 +17,6 @@ const classSchema = mongoose.Schema(
     },
     folderId: {
       type: String,
-      required:true
     },
     subjects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Subject" }],
   },
@@ -31,25 +30,18 @@ const subjectSchema = mongoose.Schema({
     type: String,
     required: [true, "Subject name is required"],
   },
+  folderId: {
+    type: String,
+  },
   units: [{ type: mongoose.Schema.Types.ObjectId, ref: "Unit" }],
 });
 
 const unitSchema = mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String },
-  contents: [{ type: mongoose.Schema.Types.ObjectId, ref: "Content" }],
-});
-
-classSchema.pre("save", async function (next) {
-  try {
-    const folderId = await createClassFolder(this.className, this.classCode);
-    this.folderId = folderId;
-
-    next();
-  } catch (error) {
-    console.error("Error creating class folder:", error);
-    next(error);
-  }
+  folderId: {
+    type: String,
+  },
 });
 
 const Subject = mongoose.model("Subject", subjectSchema);
