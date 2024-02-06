@@ -24,7 +24,7 @@ export default function Login() {
     setLoading(true);
     if (role === "student") {
       await axios
-        .post("http://localhost:4000/api/v1/user/student/signin", {
+        .post("http://192.168.59.242:4000/api/v1/user/student/signin", {
           email,
           password,
         })
@@ -41,7 +41,7 @@ export default function Login() {
         });
     } else if (role === "teacher") {
       await axios
-        .post("http://localhost:4000/api/v1/user/teacher/signin", {
+        .post("http://192.168.59.242:4000/api/v1/user/teacher/signin", {
           email,
           password,
         })
@@ -91,7 +91,7 @@ export default function Login() {
           <button
             type="submit"
             className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-          focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-white hover:bg-slate-800 bg-slate-600"
+          focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-white bg-gradient-to-r from-green-400 to-blue-500 hover:from-teal-500 hover:to-teal-500"
           >
             Login
           </button>
@@ -107,10 +107,10 @@ export default function Login() {
           </Link>
         </form>
       </div>
-      <div className="w-full bg-black absolute z-50 h-full bg-opacity-70" style={{top:error?'0%':'-200%'}}>
-        <div className="bg-slate-700 w-fit p-4 text-white m-auto mt-14 rounded-lg flex flex-col">
+      <div className="w-full bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-200 absolute z-50 h-full bg-opacity-70" style={{top:error?'0%':'-200%'}}>
+        <div className="w-fit p-4 text-gray-500 m-auto mt-14 rounded-lg flex flex-col">
            <h3 className="text-center text-xl">{error}</h3>
-           <button className="bg-lime-700 px-4 py-2 rounded-lg w-fit m-auto mt-3" onClick={()=>{
+           <button className="bg-teal-500 px-4 py-2 rounded-lg w-fit m-auto mt-3 text-white" onClick={()=>{
             setError("");
             }}>Close</button>
         </div>

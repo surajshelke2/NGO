@@ -10,7 +10,8 @@ const subjectSchema = z.object({
 
 const getAllUnits = async (req, res) => {
   try {
-    const units = await Unit.find({}).populate("contents");
+    console.log(req.params.subjectid)
+    const units = await Subject.findOne({_id:req.params.subjectid}).populate("units");
     if (!units || units === 0) {
       res.status(200).json({
         success: true,
@@ -21,7 +22,7 @@ const getAllUnits = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: units,
+      data: units.units
     });
   } catch (error) {
     res.status(400).json({
@@ -43,7 +44,8 @@ const createNewUnit = asyncHandler(async (req, res) => {
       throw new Error("The Data field is empty");
     }
 
-    const subjectId = req.body.subjectId;
+    const subjectId = req.params.subjectid;
+    console.log("subjectid : ",subjectId)
 
     if (!subjectId) {
       throw new Error("Subject ID is required");
@@ -85,9 +87,7 @@ const createNewUnit = asyncHandler(async (req, res) => {
 
 const deleteUnits = asyncHandler(async (req, res) => {
   try {
-    const { id } = req.query;
-    console.log(id);
-
+    const id = req.params.unitid;
     const deletedUnit = await Unit.findByIdAndDelete(id);
 
     if (!deletedUnit) {

@@ -5,7 +5,6 @@ const { StudentData, teacherData } = require("../model/user.js");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 
-
 const signupSchema = z.object({
   email: z.string().email(),
   firstName: z.string(),
@@ -81,9 +80,13 @@ const sendVerifyMail = asyncHandler(async (name, email, user_id) => {
       to: email,
       subject: "Email Verification",
       html: `
-      <h2>Hii ${name}</h2>
-      <p>Click the following link to verify your email:</p>
-      <a href="http://localhost:4000/api/v1/user/student/verify?id=${user_id}">Verify Email</a>
+      <div class="container">
+      <h1>Welcome to Educative!</h1>
+      <h2>Email Verification</h2>
+      <p>We're excited to have you onboard. To complete your registration and unlock all the benefits of Educative, please click the button below to verify your email address:</p>
+      <a href="http://192.168.59.242:4000/api/v1/user/student/verify?id=${user_id}" class="btn">Verify Email</a>
+      <p>If you did not request this verification, please ignore this email.</p>
+      </div>
     `,
       text: "hello",
     };
@@ -107,14 +110,10 @@ const verifyMail = asyncHandler(async (req, res) => {
       { _id: req.query.id },
       { $set: { isVerify: true } }
     );
-
-    if (updatedInfo.nModified === 1) {
-      console.log("Email Verification Is Completed !!");
-      res.status(204).send();
-    } else {
-      console.log("User not found or already verified.");
-      res.status(404).send("User not found or already verified.");
-    }
+    const type = req.originalUrl.substring("student") ? "student" : "teacher"
+    res.send(`<h1>Thank Your for Verifying Email !</h1>
+             <a href="http://192.168.59.242:5173/user/register/?role=${type}">click here to redirect to website!</a>
+    `)
   } catch (error) {
     console.error("Error in verifyMail:", error.message);
     res.status(500).send("Failed to verify email");
@@ -124,56 +123,58 @@ const verifyMail = asyncHandler(async (req, res) => {
 const login = asyncHandler(async (req, res) => {
   try {
     const { success, data } = signinSchema.safeParse(req.body);
-    console.log(data)
+    console.log(data);
     if (!success) {
       res.status(404).json({
-        success:false,
-        message:"Invalid Input Data!"
-      })
+        success: false,
+        message: "Invalid Input Data!",
+      });
       return;
     }
 
     const user = await StudentData.findOne({ email: data.email });
-    console.log(user)
-    
-    if(!user){
+    console.log(user);
+
+    if (!user) {
       res.status(404).json({
-        success:false,
-        message:"User doesn't exist!"
-      })
+        success: false,
+        message: "User doesn't exist!",
+      });
       return;
     }
 
     if (!user.isVerify) {
       res
         .status(401)
-        .json({ success: false, message: "Please verify your email before logging In!" });
-        return;
+        .json({
+          success: false,
+          message: "Please verify your email before logging In!",
+        });
+      return;
     }
 
     const passwordMatch = await bcrypt.compare(data.password, user.password);
-  
+
     if (passwordMatch) {
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
       res.status(200).json({
         success: true,
         message: "Logged in successfull!",
-        token:token,
+        token: token,
       });
       return;
-    
-    }  else {
+    } else {
       res.status(404).json({
-        status:false,
-      message:"Invalid Username and Password!"
-      })
+        status: false,
+        message: "Invalid Username and Password!",
+      });
       return;
     }
   } catch (error) {
     res.status(400).send({
-      success:false,
-      message:"Something went wrong!"
+      success: false,
+      message: "Something went wrong!",
     });
     return;
   }
@@ -213,9 +214,9 @@ const getUsers = asyncHandler(async (req, res) => {
         email: user.email,
         firstName: user.firstName,
         middleName: user.middleName,
-        lastName:user.lastName,
+        lastName: user.lastName,
         rollNo: user.rollNo,
-        role :user.role,
+        role: user.role,
         _id: user._id,
       })),
     });

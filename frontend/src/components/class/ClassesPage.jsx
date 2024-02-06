@@ -24,7 +24,7 @@ export default function ClassesPage() {
         const jwtToken = localStorage.getItem('token')
         console.log("token : ",token)
         axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
-        const response = await axios.get("http://localhost:4000/api/v1/class");
+        const response = await axios.get("http://192.168.59.242:4000/api/v1/class");
 
         console.log(response.data.classes);
         setClassData(response.data.classes);
@@ -38,10 +38,10 @@ export default function ClassesPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     await axios
       .post(
-        `http://localhost:4000/api/v1/class/add`,
+        `http://192.168.59.242:4000/api/v1/class/add`,
         {
           className,
           classCode,
@@ -55,17 +55,16 @@ export default function ClassesPage() {
         }
       )
       .then((res) => {
+        setLoading(false);
         console.log(res);
         setClassAddedDialog("20px");
       })
       .catch((err) => {
+        setLoading(false)
         console.log(err);
       });
   };
 
-  function HandleRefresh() {
-    setClassAddedDialog("-200%");
-  }
 
   function HandleAddClass() {
     setAddClassDialog("0");
@@ -77,7 +76,7 @@ export default function ClassesPage() {
       {loading ? <CustomSpinner/> : <>
       {location.search.split("=")[1] === "teacher" && (
         <button
-          className="bg-orange-400 py-2 rounded-md mx-4 px-4 mt-2 hidden max-md:block"
+          className="bg-blue-400 py-2 rounded-md mx-4 px-4 mt-2 hidden max-md:block"
           onClick={HandleAddClass}
         >
           Add Class
@@ -108,12 +107,12 @@ export default function ClassesPage() {
 
         {location.search.split("=")[1] === "teacher" && (
           <div
-            className="w-1/3 p-4 rounded-lg mx-auto max-md:absolute max-md:h-screen max-md:bg-black max-md:w-full max-md:z-50 max-md:bg-opacity-80"
+            className="w-1/3 p-4 rounded-lg mx-auto max-md:absolute max-md:h-screen max-md:bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-200 max-md:w-full max-md:z-50"
             style={{ top: AddClassDialog }}
           >
             <form
               onSubmit={(e) => handleSubmit(e)}
-              className="flex flex-col max-md:w-2/3 max-md:m-auto bg-white max-md:p-4 max-md:rounded-lg max-md:m-50px max-sm:w-10/12"
+              className="flex flex-col max-md:w-2/3 max-md:m-auto max-md:p-4 max-md:rounded-lg max-md:m-50px max-sm:w-full"
             >
               <div
                 className="text-end m-2 text-xl hidden max-md:block cursor-pointer"
@@ -122,7 +121,7 @@ export default function ClassesPage() {
                 X
               </div>
               <button
-                className="bg-orange-400 p-2 w-full rounded-md"
+                className="bg-teal-500 p-2 w-full rounded-md text-white"
                 onClick={(e) => e.preventDefault()}
               >
                 Add Class Here!
@@ -135,7 +134,7 @@ export default function ClassesPage() {
                   value={className}
                   required
                   className="mt-1 block w-full px-3 py-2 bg-transparent border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-    focus:outline-none focus:border-orange-400  focus:ring-1 focus:orange-500"
+    focus:outline-none focus:border-blue-400  focus:ring-1 focus:blue-500"
                   onChange={(e) => setClassName(e.target.value)}
                 >
                   <option value="0">Select class</option>
@@ -151,7 +150,7 @@ export default function ClassesPage() {
                   value={classCode}
                   required
                   className="mt-1 block w-full px-3 py-2 bg-transparent border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-    focus:outline-none focus:border-orange-400  focus:ring-1 focus:orange-500"
+    focus:outline-none focus:border-blue-400  focus:ring-1 focus:blue-500"
                   onChange={(e) => setClassCode(e.target.value)}
                 />
               </div>
@@ -162,42 +161,19 @@ export default function ClassesPage() {
                   value={classTeacher}
                   required
                   className="mt-1 block w-full px-3 py-2 bg-transparent border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-    focus:outline-none focus:border-orange-400  focus:ring-1 focus:orange-500"
+    focus:outline-none focus:border-blue-400  focus:ring-1 focus:blue-500"
                   onChange={(e) => setClassTeacher(e.target.value)}
                 />
               </div>
               <button
                 type="submit"
-                className="mt-6 px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 focus:outline-none"
+                className="mt-6 px-4 py-2 text-sm font-medium text-white rounded-lg focus:ring-4 focus:ring-blue-300 focus:outline-none bg-gradient-to-r from-green-400 to-blue-500 hover:from-teal-500 hover:to-teal-500"
               >
                 Submit
               </button>
             </form>
           </div>
         )}
-
-        <div
-          className="absolute text-center w-full h-full bg-black bg-opacity-70 z-50"
-          style={{ top: classAddedDialog }}
-        >
-          <div className="m-auto w-fit p-4 rounded-lg bg-blue-400 mt-8">
-            <img
-              src={ClassRegistereImage}
-              alt=""
-              width="80px"
-              className="m-auto"
-            />
-            <div className="mt-2 text-2xl font-medium">
-              Class added Successfully!
-            </div>
-            <button
-              className="mt-2 bg-green-700 px-4 py-2 rounded-lg text-white"
-              onClick={HandleRefresh}
-            >
-              Refresh
-            </button>
-          </div>
-        </div>
       </div>
       </>}
     </>
