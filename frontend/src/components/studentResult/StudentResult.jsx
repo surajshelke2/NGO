@@ -15,7 +15,7 @@ const StudentResult = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/v1/class/result/view?query=${studentId}`
+          `http://192.168.59.242:3000/api/v1/class/result/view?query=${studentId}`
         );
         setStudentResult(response.data);
       } catch (error) {

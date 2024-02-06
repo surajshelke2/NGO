@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import classNames from "classnames";
+// import classNames from "classnames";
 
 const FileUpload = () => {
   const [file, setFile] = useState(null);
@@ -21,7 +21,7 @@ const FileUpload = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:4000/api/v1/class/subject/unit/content/file/upload/${classId}`,
+        `http://192.168.59.242:3000/api/v1/class/subject/unit/content/file/upload/${classId}`,
         formData,
         {
           headers: {

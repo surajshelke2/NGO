@@ -20,7 +20,7 @@ export default function AddSubject({topPosition,setTopPosition,setRefresh}) {
       return;
     }
     ;(async()=>{
-      await axios.post(`http://localhost:4000/api/v1/class/subject/add/${classid}`,{subject}).then((res)=>{
+      await axios.post(`http://192.168.59.242:3000/api/v1/class/subject/add/${classid}`,{subject}).then((res)=>{
         setLoading(false)
         console.log("response : ",res.data.message)
       }).catch((err)=>{
