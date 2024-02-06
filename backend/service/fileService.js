@@ -16,7 +16,7 @@ async function authorize() {
   return jwtClient;
 }
 
-async function uploadFile(file, folderId, contentTitle, next) { // Pass contentTitle as a parameter
+async function uploadFile(file, folderId) { // Pass contentTitle as a parameter
   try {
     const mimeType = file.mimeType || 'application/pdf';
     const auth = await authorize();

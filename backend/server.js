@@ -38,7 +38,7 @@ const upload = multer({ storage });
 
 // Routes
 app.post(
-  "/api/v1/class/subject/unit/content/file/upload/:classId",
+  "/api/v1/class/subject/unit/content/file/upload/:unitId",
   upload.single("file"),
   fileController.upload
 );

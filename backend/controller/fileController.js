@@ -1,20 +1,23 @@
 const { drive } = require('googleapis/build/src/apis/drive');
-const { Class } = require('../model/class');
+const { Class, Unit } = require('../model/class');
 const fileService = require('../service/fileService');
 
 async function upload(req, res) {
   try {
-    console.log(req.params.classId)
-    const folder = await Class.findById(req.params.classId);
+  
+    const folder = await Unit.findById(req.params.unitId);
+
+    console.log(req.params.unitId)
     if (!folder) {
      
       return res.status(404).json({ error: 'Class not found' });
     }
-     console.log("FolderId :",folder.folderId)
+    
+    console.log(folder)
 
     const fileId = await fileService.uploadFile(req.file, folder.folderId);
-    console.log("fileController:",fileId)
-    console.log("File Successfully Added ");
+   
+    
     res.status(200).json({ 
       message: "File Successfully Added",
       folderId: folder.folderId,

@@ -14,7 +14,7 @@ const getAllSubjects = async (req, res) => {
       "subjects"
     );
     const subjects = response.subjects;
-    console.log(subjects);
+
     if (!subjects || subjects === 0) {
       res.status(200).json({
         success: true,

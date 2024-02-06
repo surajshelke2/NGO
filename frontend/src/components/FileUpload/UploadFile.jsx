@@ -7,7 +7,7 @@ import ViewFilesInFolder from "./ViewFile";
 const FileUpload = () => {
   const [file, setFile] = useState(null);
   const[contentTitle, setContentTitle] = useState('');
-  const { classId } = useParams();
+  const { unitId } = useParams();
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -22,7 +22,7 @@ const FileUpload = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/v1/class/subject/unit/content/file/upload/${classId}`,
+        `http://localhost:3000/api/v1/class/subject/unit/content/file/upload/${unitId}`,
         formData,
         {
           headers: {
