@@ -3,6 +3,7 @@ import { classList } from "../../constants.js";
 import axios from 'axios'
 import { useParams } from "react-router-dom";
 import CustomSpinner from "../CustomSpinner.jsx";
+import LoadingComponent from "../Loader/LoadingAnimation.jsx";
 
 export default function AddSubject({topPosition,setTopPosition,setRefresh}) {
    const [subject, setSubject] = useState("");
@@ -31,7 +32,7 @@ export default function AddSubject({topPosition,setTopPosition,setRefresh}) {
     setTopPosition("-200%")
   }
   return (
-      loading ? <CustomSpinner/> :  <div className="absolute w-full z-50 bg-black text-gray-500 h-screen bg-opacity-70" style={{top:topPosition}}>
+      loading ? <LoadingComponent/> :  <div className="absolute w-full z-50 bg-black text-gray-500 h-screen bg-opacity-70" style={{top:topPosition}}>
       <div className="m-auto w-1/3 mt-12 bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-200 p-2 rounded-lg max-sm:w-full max-sm:absolute">
         <div className="text-black text-2xl text-end mb-4 cursor-pointer" onClick={()=>setTopPosition("-200%")}>X</div>
         <form

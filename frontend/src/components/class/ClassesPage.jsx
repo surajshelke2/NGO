@@ -4,7 +4,7 @@ import { classList } from "../../constants.js";
 import ClassCard from "./ClassCard.jsx";
 import axios from "axios";
 import { useLocation, useParams } from "react-router-dom";
-import CustomSpinner from "../CustomSpinner.jsx";
+import LoadingComponent from '.././Loader/LoadingAnimation.jsx'
 
 export default function ClassesPage() {
   const [className, setClassName] = useState("");
@@ -73,7 +73,7 @@ export default function ClassesPage() {
   return (
     <>
       {/* <ClassNavBar /> */}
-      {loading ? <CustomSpinner/> : <>
+      {loading ? <LoadingComponent/>: <>
       {location.search.split("=")[1] === "teacher" && (
         <button
           className="bg-blue-400 py-2 rounded-md mx-4 px-4 mt-2 hidden max-md:block"

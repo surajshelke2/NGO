@@ -8,7 +8,7 @@ const NotFound = () => {
       <div className="w-full max-w-xs">
         <Lottie animationData={animationData} />
       </div>
-      <p className="mt-4">The page you are looking for does not exist.</p>
+      <p className="mt-4 font-semibold">The page you are looking for does not exist.</p>
     </div>
   );
 };
