@@ -16,6 +16,7 @@ import ResultSection from './components/result/Result.jsx'
 import FindStudents from './components/result/FindStudent.jsx'  
 import studentResult from './components/studentResult/StudentResult.jsx'
 import NotFound from './components/PageNotFound.jsx'
+import { LoadingProvider } from './components/Loader/LoadingContext.jsx'
 
 
 function AppRoutes() {
@@ -44,7 +45,9 @@ function AppRoutes() {
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
+    <LoadingProvider>
         <AppRoutes />
+    </LoadingProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

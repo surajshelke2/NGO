@@ -5,6 +5,21 @@ const { StudentData, teacherData } = require("../model/user.js");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 
+const sendSuccessResponse = (res, message, data = null) => {
+  res.status(200).json({
+    success: true,
+    message: message,
+    data: data,
+  });
+};
+
+const sendErrorResponse = (res, statusCode, message) => {
+  res.status(statusCode).json({
+    success: false,
+    message: message,
+  });
+};
+
 const signupSchema = z.object({
   email: z.string().email(),
   firstName: z.string(),
@@ -55,13 +70,10 @@ const register = asyncHandler(async (req, res) => {
     const userId = user._id;
     const token = jwt.sign({ userId }, process.env.JWT_SECRET);
     sendVerifyMail(data.firstName, data.email, userId);
-    res.json({
-      message: "User created successfully",
-      token: token,
-    });
+    sendSuccessResponse(res, "User created successfully", { token: token });
   } catch (error) {
     console.error("Error in register:", error.message);
-    res.status(400).send(error.message);
+    sendErrorResponse(res, 400, error.message);
   }
 });
 
@@ -91,13 +103,7 @@ const sendVerifyMail = asyncHandler(async (name, email, user_id) => {
       text: "hello",
     };
 
-    await transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("Error sending verification email:", error.message);
-        throw new Error("Failed to send verification email");
-      }
-      console.log("Verification email sent:", info);
-    });
+    await transporter.sendMail(mailOptions);
   } catch (error) {
     console.error("Error sending verification email:", error.message);
     throw new Error("Failed to send verification email");
@@ -110,73 +116,46 @@ const verifyMail = asyncHandler(async (req, res) => {
       { _id: req.query.id },
       { $set: { isVerify: true } }
     );
-    const type = req.originalUrl.substring("student") ? "student" : "teacher"
-    res.send(`<h1>Thank Your for Verifying Email !</h1>
-             <a href="http://localhost:5173/user/register/?role=${type}">click here to redirect to website!</a>
-    `)
+    const type = req.originalUrl.includes("student") ? "student" : "teacher";
+    sendSuccessResponse(
+      res,
+      "Thank you for Verifying Email!",
+      `<h1>Thank You for Verifying Email!</h1><a href="http://localhost:5173/user/register/?role=${type}">click here to redirect to website!</a>`
+    );
   } catch (error) {
     console.error("Error in verifyMail:", error.message);
-    res.status(500).send("Failed to verify email");
+    sendErrorResponse(res, 500, "Failed to verify email");
   }
 });
 
 const login = asyncHandler(async (req, res) => {
   try {
     const { success, data } = signinSchema.safeParse(req.body);
-    console.log(data);
     if (!success) {
-      res.status(404).json({
-        success: false,
-        message: "Invalid Input Data!",
-      });
-      return;
+      throw new Error("Invalid input data");
     }
 
     const user = await StudentData.findOne({ email: data.email });
-    console.log(user);
 
     if (!user) {
-      res.status(404).json({
-        success: false,
-        message: "User doesn't exist!",
-      });
-      return;
+      throw new Error("User doesn't exist");
     }
 
     if (!user.isVerify) {
-      res
-        .status(401)
-        .json({
-          success: false,
-          message: "Please verify your email before logging In!",
-        });
-      return;
+      throw new Error("Please verify your email before logging in");
     }
 
     const passwordMatch = await bcrypt.compare(data.password, user.password);
 
     if (passwordMatch) {
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
-
-      res.status(200).json({
-        success: true,
-        message: "Logged in successfull!",
-        token: token,
-      });
-      return;
+      sendSuccessResponse(res, "Logged in successfully", { token: token });
     } else {
-      res.status(404).json({
-        status: false,
-        message: "Invalid Username and Password!",
-      });
-      return;
+      throw new Error("Invalid username or password");
     }
   } catch (error) {
-    res.status(400).send({
-      success: false,
-      message: "Something went wrong!",
-    });
-    return;
+    console.error("Error in login:", error.message);
+    sendErrorResponse(res, 400, error.message);
   }
 });
 
@@ -189,12 +168,10 @@ const updateUser = asyncHandler(async (req, res) => {
 
     await StudentData.updateOne({ _id: req.userId }, { $set: data });
 
-    res.json({
-      message: "Updated successfully",
-    });
+    sendSuccessResponse(res, "Updated successfully");
   } catch (error) {
     console.error("Error in updateUser:", error.message);
-    res.status(400).send(error.message);
+    sendErrorResponse(res, 400, error.message);
   }
 });
 
@@ -209,20 +186,20 @@ const getUsers = asyncHandler(async (req, res) => {
       ],
     });
 
-    res.json({
-      users: users.map((user) => ({
-        email: user.email,
-        firstName: user.firstName,
-        middleName: user.middleName,
-        lastName: user.lastName,
-        rollNo: user.rollNo,
-        role: user.role,
-        _id: user._id,
-      })),
-    });
+    const formattedUsers = users.map((user) => ({
+      email: user.email,
+      firstName: user.firstName,
+      middleName: user.middleName,
+      lastName: user.lastName,
+      rollNo: user.rollNo,
+      role: user.role,
+      _id: user._id,
+    }));
+
+    sendSuccessResponse(res, "Users retrieved successfully", { users: formattedUsers });
   } catch (error) {
     console.error("Error in getUsers:", error.message);
-    res.status(500).send("Internal server error");
+    sendErrorResponse(res, 500, "Internal server error");
   }
 });
 

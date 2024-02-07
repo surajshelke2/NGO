@@ -4,7 +4,7 @@ export default function Header() {
   console.log(location)
   return (
     <>
-      <nav className="max-sm:px-4 lg:px-8 w-full px-18 py-1 sticky top-0 z-50 shadow-md bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-200">
+     <nav className="max-sm:px-4 lg:px-8 w-full px-18 py-1 sticky top-0 z-50 shadow-md bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-200">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
             {/* <img src={img} className="" alt="Logo" width="150px"/> */}
